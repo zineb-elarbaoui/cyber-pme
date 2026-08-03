@@ -1,0 +1,532 @@
+[
+  {
+    "id_mesure": 1,
+    "titre": "Interdire l'installation de logiciels non autorisés sur les postes de travail sa...",
+    "description": "Interdire l'installation de logiciels non autorisés sur les postes de travail sans validation du service IT (ou du responsable désigné).",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "faible",
+    "section_guide_precise": "3.1.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 2,
+    "titre": "Empêcher la modification non autorisée de la configuration des postes de travail...",
+    "description": "Empêcher la modification non autorisée de la configuration des postes de travail (verrouillage des paramètres système).",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "faible",
+    "section_guide_precise": "3.1.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 3,
+    "titre": "Configurer un verrouillage automatique de l'écran après une période d'inactivité...",
+    "description": "Configurer un verrouillage automatique de l'écran après une période d'inactivité sur chaque poste de travail.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.1.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 4,
+    "titre": "Renforcer le verrouillage physique des postes accédant à des données sensibles :...",
+    "description": "Renforcer le verrouillage physique des postes accédant à des données sensibles : délai de verrouillage réduit et accès contrôlé (badge ou équivalent).",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "tres_eleve",
+    "section_guide_precise": "3.1.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 5,
+    "titre": "Sécuriser les appareils nomades lors des déplacements : matériel dédié aux missi...",
+    "description": "Sécuriser les appareils nomades lors des déplacements : matériel dédié aux missions, signe distinctif sur les appareils, aucune donnée non nécessaire emportée.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.5.3",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 6,
+    "titre": "Installer un antivirus à jour sur tous les postes et serveurs, avec mise à jour ...",
+    "description": "Installer un antivirus à jour sur tous les postes et serveurs, avec mise à jour automatique activée.",
+    "cout_estime": "moyen",
+    "difficulte_estimee": "moyenne",
+    "impact": "eleve",
+    "section_guide_precise": "3.1.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 7,
+    "titre": "Interdire la copie de fichiers depuis des sources non vérifiées (clés USB, pièce...",
+    "description": "Interdire la copie de fichiers depuis des sources non vérifiées (clés USB, pièces jointes) sans analyse antivirus préalable.",
+    "cout_estime": "moyen",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.1.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 8,
+    "titre": "Déconnecter immédiatement du réseau local tout poste identifié comme infecté et ...",
+    "description": "Déconnecter immédiatement du réseau local tout poste identifié comme infecté et signaler l'incident sans délai.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "eleve",
+    "section_guide_precise": "3.1.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 9,
+    "titre": "Sécuriser les connexions Wi-Fi de l'entreprise : chiffrement WPA2/WPA3, mot de p...",
+    "description": "Sécuriser les connexions Wi-Fi de l'entreprise : chiffrement WPA2/WPA3, mot de passe fort, désactivation si non utilisé.",
+    "cout_estime": "moyen",
+    "difficulte_estimee": "difficile",
+    "impact": "eleve",
+    "section_guide_precise": "3.2.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 10,
+    "titre": "Mettre en place un VPN pour sécuriser les accès distants et le télétravail.",
+    "description": "Mettre en place un VPN pour sécuriser les accès distants et le télétravail.",
+    "cout_estime": "moyen",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.1.6",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 11,
+    "titre": "Sensibiliser les collaborateurs à la détection des tentatives de phishing (liens...",
+    "description": "Sensibiliser les collaborateurs à la détection des tentatives de phishing (liens suspects, expéditeurs inconnus) et prévoir une procédure de signalement à l'administrateur.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "eleve",
+    "section_guide_precise": "3.3.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 12,
+    "titre": "Déployer un filtre anti-spam et désactiver l'ouverture automatique des pièces jo...",
+    "description": "Déployer un filtre anti-spam et désactiver l'ouverture automatique des pièces jointes non vérifiées.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.4.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 13,
+    "titre": "Exiger des mots de passe d'au moins 8 caractères incluant majuscules, minuscules...",
+    "description": "Exiger des mots de passe d'au moins 8 caractères incluant majuscules, minuscules, chiffres et caractères spéciaux.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "eleve",
+    "section_guide_precise": "3.1.4",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 14,
+    "titre": "Imposer un renouvellement périodique des mots de passe (tous les 3 mois recomman...",
+    "description": "Imposer un renouvellement périodique des mots de passe (tous les 3 mois recommandé).",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.4.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 15,
+    "titre": "Interdire l'utilisation d'un même mot de passe pour plusieurs comptes ou système...",
+    "description": "Interdire l'utilisation d'un même mot de passe pour plusieurs comptes ou systèmes (en particulier messagerie professionnelle et personnelle).",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.4.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 16,
+    "titre": "Bloquer l'accès après un nombre limité de tentatives de connexion échouées.",
+    "description": "Bloquer l'accès après un nombre limité de tentatives de connexion échouées.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "eleve",
+    "section_guide_precise": "3.1.4",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 17,
+    "titre": "Restreindre les comptes administrateurs aux seuls postes sécurisés et appliquer ...",
+    "description": "Restreindre les comptes administrateurs aux seuls postes sécurisés et appliquer le principe du moindre privilège pour les droits d'accès.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "tres_eleve",
+    "section_guide_precise": "3.1.5",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 18,
+    "titre": "Séparer strictement les comptes et équipements à usage personnel de ceux à usage...",
+    "description": "Séparer strictement les comptes et équipements à usage personnel de ceux à usage professionnel.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "faible",
+    "section_guide_precise": "5.1 (bonne pratique n°11)",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 19,
+    "titre": "Activer les mises à jour automatiques de sécurité des systèmes d'exploitation et...",
+    "description": "Activer les mises à jour automatiques de sécurité des systèmes d'exploitation et logiciels, ou désigner un responsable de leur application régulière.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "eleve",
+    "section_guide_precise": "3.1.7",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 20,
+    "titre": "N'installer des logiciels et applications que depuis les sites officiels des édi...",
+    "description": "N'installer des logiciels et applications que depuis les sites officiels des éditeurs.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.1.7",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 21,
+    "titre": "Maintenir à jour le CMS et les extensions du site web de l'entreprise, et vérifi...",
+    "description": "Maintenir à jour le CMS et les extensions du site web de l'entreprise, et vérifier régulièrement la version du serveur web utilisée.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.2.3",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 22,
+    "titre": "Chiffrer les données sensibles avant tout stockage ou transfert vers un service ...",
+    "description": "Chiffrer les données sensibles avant tout stockage ou transfert vers un service cloud.",
+    "cout_estime": "moyen",
+    "difficulte_estimee": "difficile",
+    "impact": "tres_eleve",
+    "section_guide_precise": "3.5.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 23,
+    "titre": "Mettre en place un certificat SSL (HTTPS) pour toute collecte de données sensibl...",
+    "description": "Mettre en place un certificat SSL (HTTPS) pour toute collecte de données sensibles en ligne, en priorité absolue.",
+    "cout_estime": "moyen",
+    "difficulte_estimee": "difficile",
+    "impact": "tres_eleve",
+    "section_guide_precise": "3.5.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 24,
+    "titre": "Centraliser et sécuriser le partage de fichiers via une solution professionnelle...",
+    "description": "Centraliser et sécuriser le partage de fichiers via une solution professionnelle plutôt que des outils grand public non approuvés par l'IT.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "3.4.4",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 25,
+    "titre": "Vérifier systématiquement la présence du cadenas et du protocole HTTPS avant tou...",
+    "description": "Vérifier systématiquement la présence du cadenas et du protocole HTTPS avant tout paiement ou saisie de données sensibles en ligne.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "5.1 (bonne pratique n°10)",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 26,
+    "titre": "Définir une procédure formelle de réaction en cas d'incident : déconnecter la ma...",
+    "description": "Définir une procédure formelle de réaction en cas d'incident : déconnecter la machine du réseau sans l'éteindre, afin de préserver les preuves pour l'analyse.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "tres_eleve",
+    "section_guide_precise": "5.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 27,
+    "titre": "Prévoir une chaîne d'alerte immédiate (hiérarchie, responsable sécurité, prestat...",
+    "description": "Prévoir une chaîne d'alerte immédiate (hiérarchie, responsable sécurité, prestataire informatique) en cas d'incident suspecté.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "tres_eleve",
+    "section_guide_precise": "5.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 28,
+    "titre": "Prévoir la réalisation d'une copie physique du disque affecté avant toute interv...",
+    "description": "Prévoir la réalisation d'une copie physique du disque affecté avant toute intervention corrective, pour permettre l'analyse ultérieure.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "5.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 29,
+    "titre": "Établir une procédure de dépôt de plainte (gendarmerie/police judiciaire, ou CND...",
+    "description": "Établir une procédure de dépôt de plainte (gendarmerie/police judiciaire, ou CNDP en cas de données personnelles) en cas d'incident avéré.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "5.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 30,
+    "titre": "Documenter une procédure de reprise post-incident : réinstallation complète du s...",
+    "description": "Documenter une procédure de reprise post-incident : réinstallation complète du système, restauration depuis une sauvegarde saine, changement de tous les mots de passe.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "eleve",
+    "section_guide_precise": "5.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 31,
+    "titre": "Mettre en place des sauvegardes régulières (quotidiennes ou hebdomadaires) sur u...",
+    "description": "Mettre en place des sauvegardes régulières (quotidiennes ou hebdomadaires) sur un support externe dédié.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "eleve",
+    "section_guide_precise": "3.5.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 32,
+    "titre": "Stocker les sauvegardes hors site et sous forme chiffrée pour les données sensib...",
+    "description": "Stocker les sauvegardes hors site et sous forme chiffrée pour les données sensibles, afin de limiter le risque de perte ou de vol simultané avec le poste d'origine.",
+    "cout_estime": "moyen",
+    "difficulte_estimee": "moyenne",
+    "impact": "tres_eleve",
+    "section_guide_precise": "3.5.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 33,
+    "titre": "Mettre en conformité la collecte de données personnelles avec la loi 09-08 : inf...",
+    "description": "Mettre en conformité la collecte de données personnelles avec la loi 09-08 : information des personnes concernées, autorisation/déclaration CNDP, durée de conservation définie, finalité précise du traitement.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "eleve",
+    "section_guide_precise": "3.5.4",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 34,
+    "titre": "Rédiger un plan de sécurité formalisé recensant les biens de l'entreprise et un ...",
+    "description": "Rédiger un plan de sécurité formalisé recensant les biens de l'entreprise et un plan d'action priorisé de mesures de sécurité SI.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "moyen",
+    "section_guide_precise": "2.1.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 35,
+    "titre": "Mettre à jour le plan de sécurité au moins une fois par an ou à chaque revue des...",
+    "description": "Mettre à jour le plan de sécurité au moins une fois par an ou à chaque revue des risques.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "faible",
+    "section_guide_precise": "2.1.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 36,
+    "titre": "Intégrer les dépenses de sécurité SI dans le budget général de l'entreprise, en ...",
+    "description": "Intégrer les dépenses de sécurité SI dans le budget général de l'entreprise, en priorisant d'abord les mesures à coût faible ou nul.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "faible",
+    "section_guide_precise": "2.1.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 37,
+    "titre": "Étudier la souscription d'une assurance cyber pour couvrir les risques résiduels...",
+    "description": "Étudier la souscription d'une assurance cyber pour couvrir les risques résiduels non traités faute de budget dédié.",
+    "cout_estime": "moyen",
+    "difficulte_estimee": "facile",
+    "impact": "faible",
+    "section_guide_precise": "2.1.1",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 38,
+    "titre": "Désigner un collaborateur responsable de la sécurité SI (RSSI ou équivalent), mê...",
+    "description": "Désigner un collaborateur responsable de la sécurité SI (RSSI ou équivalent), même à temps partiel en complément d'autres fonctions.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "eleve",
+    "section_guide_precise": "2.1.3",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 39,
+    "titre": "Faire rédiger et valider formellement une politique de sécurité SI par la direct...",
+    "description": "Faire rédiger et valider formellement une politique de sécurité SI par la direction de l'entreprise.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "moyen",
+    "section_guide_precise": "2.1.3",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 40,
+    "titre": "Impliquer activement la direction dans le soutien des projets de sécurité et la ...",
+    "description": "Impliquer activement la direction dans le soutien des projets de sécurité et la sensibilisation des employés à la politique SSI.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "faible",
+    "section_guide_precise": "2.1.3",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 41,
+    "titre": "Réaliser une analyse de risques identifiant les actifs primaires (processus, inf...",
+    "description": "Réaliser une analyse de risques identifiant les actifs primaires (processus, information) et les actifs de support (matériel, logiciels, réseaux, personnel, sites) à protéger.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "2.5",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 42,
+    "titre": "Prioriser les mesures de sécurité sur la base d'une analyse de risques documenté...",
+    "description": "Prioriser les mesures de sécurité sur la base d'une analyse de risques documentée plutôt que de façon arbitraire.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "moyenne",
+    "impact": "moyen",
+    "section_guide_precise": "2.5",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 43,
+    "titre": "Rédiger et faire signer une charte de bon usage du SI définissant les droits et ...",
+    "description": "Rédiger et faire signer une charte de bon usage du SI définissant les droits et devoirs de chaque utilisateur (matériel, logiciels, données, réseaux).",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "eleve",
+    "section_guide_precise": "2.1.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 44,
+    "titre": "Annexer la charte d'usage au contrat de travail ou au règlement intérieur afin d...",
+    "description": "Annexer la charte d'usage au contrat de travail ou au règlement intérieur afin de la rendre opposable à chaque utilisateur.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "moyen",
+    "section_guide_precise": "2.1.2",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 45,
+    "titre": "Mettre en place un programme de sensibilisation à la sécurité SI destiné à tous ...",
+    "description": "Mettre en place un programme de sensibilisation à la sécurité SI destiné à tous les employés, via plusieurs canaux (formation, mail, affichage).",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "eleve",
+    "section_guide_precise": "2.1.5",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 46,
+    "titre": "Former les employés à choisir un mot de passe complexe et à ne jamais le noter s...",
+    "description": "Former les employés à choisir un mot de passe complexe et à ne jamais le noter sur un support à proximité du poste de travail.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "moyen",
+    "section_guide_precise": "2.1.5",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 47,
+    "titre": "Sensibiliser les employés à ne jamais divulguer leur mot de passe ou identifiant...",
+    "description": "Sensibiliser les employés à ne jamais divulguer leur mot de passe ou identifiant, y compris en interne.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "eleve",
+    "section_guide_precise": "2.1.5",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 48,
+    "titre": "Former les employés à signaler au helpdesk (plutôt qu'ouvrir) tout email dont l'...",
+    "description": "Former les employés à signaler au helpdesk (plutôt qu'ouvrir) tout email dont l'expéditeur ou la provenance est incertain.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "eleve",
+    "section_guide_precise": "2.1.5",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 49,
+    "titre": "Former les employés au maintien d'un bureau clair (« clean desk ») sans document...",
+    "description": "Former les employés au maintien d'un bureau clair (« clean desk ») sans document confidentiel laissé visible.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "faible",
+    "section_guide_precise": "2.1.5",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 50,
+    "titre": "Sensibiliser à la désactivation du Wi-Fi hors usage et à la sécurisation des app...",
+    "description": "Sensibiliser à la désactivation du Wi-Fi hors usage et à la sécurisation des appareils mobiles au même niveau que les postes fixes.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "faible",
+    "section_guide_precise": "2.1.5",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 51,
+    "titre": "Si l'entreprise traite des données de citoyens européens, évaluer l'applicabilit...",
+    "description": "Si l'entreprise traite des données de citoyens européens, évaluer l'applicabilité du RGPD : nommer un DPO si nécessaire, tenir un registre des traitements, prévoir une procédure de notification des violations.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "moyen",
+    "section_guide_precise": "2.6.12",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 52,
+    "titre": "Prévoir contractuellement les obligations de protection des données personnelles...",
+    "description": "Prévoir contractuellement les obligations de protection des données personnelles lors du recours à la sous-traitance ou à l'infogérance des SI.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "moyen",
+    "section_guide_precise": "2.6.6 / 2.6.7",
+    "estimation_non_issue_du_guide": true
+  },
+  {
+    "id_mesure": 53,
+    "titre": "Sensibiliser les collaborateurs au fait que les accès et interventions non autor...",
+    "description": "Sensibiliser les collaborateurs au fait que les accès et interventions non autorisés sur les systèmes de traitement automatisé de données sont pénalement sanctionnés (loi 07-03), en complément des mesures techniques.",
+    "cout_estime": "faible",
+    "difficulte_estimee": "facile",
+    "impact": "faible",
+    "section_guide_precise": "2.6.1",
+    "estimation_non_issue_du_guide": true
+  }
+]

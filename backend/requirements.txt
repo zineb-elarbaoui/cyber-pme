@@ -1,0 +1,65 @@
+# =============================================================================
+# PFA N°13 — Dépendances backend
+# =============================================================================
+
+# --- Sprint 3 : moteur de règles + tests -------------------------------------
+pytest>=8.0.0
+pytest-cov>=5.0.0          # couverture de tests, utile pour le rapport de test
+
+# --- Sprint 4 : RAG / pgvector ------------------------------------------------
+psycopg2-binary>=2.9.9     # driver PostgreSQL (utilisé par SQLAlchemy et/ou en direct)
+pgvector>=0.2.5            # intégration Python pour le type vector de pgvector
+anthropic>=0.34.0          # client API pour les justifications RAG/LLM
+tiktoken>=0.7.0            # découpage/chunking du guide CMRPI/AUSIM pour l'embedding
+
+# --- Sprint 5 : API backend ---------------------------------------------------
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0  # serveur ASGI pour lancer FastAPI en dev
+sqlalchemy>=2.0.30         # ORM
+alembic>=1.13.0            # migrations de schéma (si besoin d'évolutions post-Sprint 2)
+pydantic>=2.7.0            # validation des schémas (déjà une dépendance de FastAPI, listé pour clarté)
+pydantic-settings>=2.3.0   # gestion de la config (.env)
+python-dotenv>=1.0.1
+
+# --- Sprint 6 : export PDF du rapport de recommandations ---------------------
+reportlab>=4.2.0           # ou weasyprint selon le rendu souhaité
+
+# --- Optionnel / Sprint 4 bonus : clustering/classification (si dataset dispo)
+scikit-learn>=1.5.0
+pandas>=2.2.0
+
+
+
+# Lecture du guide source
+pdfplumber==0.11.4       # si le guide est un PDF
+python-docx==1.1.2       # si le guide est un .docx
+
+# Embeddings locaux (gratuit, pas de clé API)
+sentence-transformers==3.0.1
+
+# Connexion PostgreSQL / pgvector
+psycopg2-binary==2.9.9
+
+
+
+# =============================================================================
+# Sprint 4 — RAG (chunking, embeddings, retriever, justification LLM)
+# =============================================================================
+pdfplumber              # extraction texte PDF (chunking.py)
+pymupdf                 # extraction PDF alternative + OCR (chunking.py, diagnostic_extraction.py)
+pytesseract              # OCR (chunking.py --ocr)
+pillow                   # manipulation d'images pour l'OCR
+python-docx               # extraction texte .docx (chunking.py)
+sentence-transformers    # embeddings multilingues (embeddings.py, retriever.py)
+psycopg2-binary          # connexion PostgreSQL brute utilisée par retriever.py/embeddings.py
+
+# =============================================================================
+# Sprint 5 — API FastAPI
+# =============================================================================
+fastapi
+uvicorn[standard]
+sqlalchemy>=2.0
+pydantic>=2.0
+pydantic-settings         # app/config.py (settings.DATABASE_URL, etc.)
+pgvector                  # type Vector() pour le mapping ORM de guide_chunk (models/guide_chunk.py)
+httpx                     # utilisé par TestClient de FastAPI pour les tests pytest des endpoints

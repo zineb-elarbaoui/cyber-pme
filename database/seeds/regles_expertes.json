@@ -1,0 +1,711 @@
+[
+  {
+    "id_regle": 1,
+    "id_domaine": 4,
+    "nom_domaine": "Gestion des actifs",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 13,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 1,
+    "priorite_base": 2
+  },
+  {
+    "id_regle": 2,
+    "id_domaine": 4,
+    "nom_domaine": "Gestion des actifs",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 13,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 2,
+    "priorite_base": 2
+  },
+  {
+    "id_regle": 3,
+    "id_domaine": 8,
+    "nom_domaine": "Sécurité physique et environnementale",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 17,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 3,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 4,
+    "id_domaine": 8,
+    "nom_domaine": "Sécurité physique et environnementale",
+    "id_regle_parent": 3,
+    "condition": {
+      "id_question": 17,
+      "operateur": "<=",
+      "valeur": 1,
+      "et": {
+        "champ": "traite_donnees_sensibles",
+        "valeur": true
+      }
+    },
+    "id_mesure": 4,
+    "priorite_base": 5
+  },
+  {
+    "id_regle": 5,
+    "id_domaine": 8,
+    "nom_domaine": "Sécurité physique et environnementale",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 17,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 5,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 6,
+    "id_domaine": 9,
+    "nom_domaine": "Exploitation et réseaux",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 18,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 6,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 7,
+    "id_domaine": 9,
+    "nom_domaine": "Exploitation et réseaux",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 18,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 7,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 8,
+    "id_domaine": 9,
+    "nom_domaine": "Exploitation et réseaux",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 18,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 8,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 9,
+    "id_domaine": 9,
+    "nom_domaine": "Exploitation et réseaux",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 18,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 9,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 10,
+    "id_domaine": 9,
+    "nom_domaine": "Exploitation et réseaux",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 18,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 10,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 11,
+    "id_domaine": 9,
+    "nom_domaine": "Exploitation et réseaux",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 18,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 11,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 12,
+    "id_domaine": 9,
+    "nom_domaine": "Exploitation et réseaux",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 18,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 12,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 13,
+    "id_domaine": 10,
+    "nom_domaine": "Contrôle d'accès logique / Authentification",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 19,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 13,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 14,
+    "id_domaine": 10,
+    "nom_domaine": "Contrôle d'accès logique / Authentification",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 19,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 14,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 15,
+    "id_domaine": 10,
+    "nom_domaine": "Contrôle d'accès logique / Authentification",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 19,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 15,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 16,
+    "id_domaine": 10,
+    "nom_domaine": "Contrôle d'accès logique / Authentification",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 19,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 16,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 17,
+    "id_domaine": 10,
+    "nom_domaine": "Contrôle d'accès logique / Authentification",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 19,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 17,
+    "priorite_base": 5
+  },
+  {
+    "id_regle": 18,
+    "id_domaine": 10,
+    "nom_domaine": "Contrôle d'accès logique / Authentification",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 19,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 18,
+    "priorite_base": 2
+  },
+  {
+    "id_regle": 19,
+    "id_domaine": 11,
+    "nom_domaine": "Acquisition, développement et maintenance des SI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 20,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 19,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 20,
+    "id_domaine": 11,
+    "nom_domaine": "Acquisition, développement et maintenance des SI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 20,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 20,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 21,
+    "id_domaine": 11,
+    "nom_domaine": "Acquisition, développement et maintenance des SI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 20,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 21,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 22,
+    "id_domaine": 12,
+    "nom_domaine": "Cryptographie et IGC",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 21,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 22,
+    "priorite_base": 5
+  },
+  {
+    "id_regle": 23,
+    "id_domaine": 12,
+    "nom_domaine": "Cryptographie et IGC",
+    "id_regle_parent": 22,
+    "condition": {
+      "id_question": 21,
+      "operateur": "<=",
+      "valeur": 1,
+      "et": {
+        "champ": "traite_donnees_sensibles",
+        "valeur": true
+      }
+    },
+    "id_mesure": 23,
+    "priorite_base": 5
+  },
+  {
+    "id_regle": 24,
+    "id_domaine": 12,
+    "nom_domaine": "Cryptographie et IGC",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 21,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 24,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 25,
+    "id_domaine": 12,
+    "nom_domaine": "Cryptographie et IGC",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 21,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 25,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 26,
+    "id_domaine": 13,
+    "nom_domaine": "Gestion des incidents SSI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 22,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 26,
+    "priorite_base": 5
+  },
+  {
+    "id_regle": 27,
+    "id_domaine": 13,
+    "nom_domaine": "Gestion des incidents SSI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 22,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 27,
+    "priorite_base": 5
+  },
+  {
+    "id_regle": 28,
+    "id_domaine": 13,
+    "nom_domaine": "Gestion des incidents SSI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 22,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 28,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 29,
+    "id_domaine": 13,
+    "nom_domaine": "Gestion des incidents SSI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 22,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 29,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 30,
+    "id_domaine": 13,
+    "nom_domaine": "Gestion des incidents SSI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 22,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 30,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 31,
+    "id_domaine": 14,
+    "nom_domaine": "Plan de continuité d'activité",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 23,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 31,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 32,
+    "id_domaine": 14,
+    "nom_domaine": "Plan de continuité d'activité",
+    "id_regle_parent": 31,
+    "condition": {
+      "id_question": 23,
+      "operateur": "<=",
+      "valeur": 1,
+      "et": {
+        "champ": "traite_donnees_sensibles",
+        "valeur": true
+      }
+    },
+    "id_mesure": 32,
+    "priorite_base": 5
+  },
+  {
+    "id_regle": 33,
+    "id_domaine": 15,
+    "nom_domaine": "Conformité légale & réglementaire",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 24,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 33,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 34,
+    "id_domaine": 1,
+    "nom_domaine": "Politique de sécurité",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 10,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 34,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 35,
+    "id_domaine": 1,
+    "nom_domaine": "Politique de sécurité",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 10,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 35,
+    "priorite_base": 2
+  },
+  {
+    "id_regle": 36,
+    "id_domaine": 1,
+    "nom_domaine": "Politique de sécurité",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 10,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 36,
+    "priorite_base": 2
+  },
+  {
+    "id_regle": 37,
+    "id_domaine": 1,
+    "nom_domaine": "Politique de sécurité",
+    "id_regle_parent": 34,
+    "condition": {
+      "id_question": 10,
+      "operateur": "<=",
+      "valeur": 1,
+      "et": {
+        "champ": "budget_cybersecurite",
+        "valeur": "aucun"
+      }
+    },
+    "id_mesure": 37,
+    "priorite_base": 2
+  },
+  {
+    "id_regle": 38,
+    "id_domaine": 2,
+    "nom_domaine": "Organisation de la sécurité",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 11,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 38,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 39,
+    "id_domaine": 2,
+    "nom_domaine": "Organisation de la sécurité",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 11,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 39,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 40,
+    "id_domaine": 2,
+    "nom_domaine": "Organisation de la sécurité",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 11,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 40,
+    "priorite_base": 2
+  },
+  {
+    "id_regle": 41,
+    "id_domaine": 3,
+    "nom_domaine": "Gestion des risques SSI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 12,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 41,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 42,
+    "id_domaine": 3,
+    "nom_domaine": "Gestion des risques SSI",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 12,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 42,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 43,
+    "id_domaine": 6,
+    "nom_domaine": "Sécurité des ressources humaines",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 15,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 43,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 44,
+    "id_domaine": 6,
+    "nom_domaine": "Sécurité des ressources humaines",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 15,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 44,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 45,
+    "id_domaine": 7,
+    "nom_domaine": "Sensibilisation et formation",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 16,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 45,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 46,
+    "id_domaine": 7,
+    "nom_domaine": "Sensibilisation et formation",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 16,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 46,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 47,
+    "id_domaine": 7,
+    "nom_domaine": "Sensibilisation et formation",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 16,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 47,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 48,
+    "id_domaine": 7,
+    "nom_domaine": "Sensibilisation et formation",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 16,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 48,
+    "priorite_base": 4
+  },
+  {
+    "id_regle": 49,
+    "id_domaine": 7,
+    "nom_domaine": "Sensibilisation et formation",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 16,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 49,
+    "priorite_base": 2
+  },
+  {
+    "id_regle": 50,
+    "id_domaine": 7,
+    "nom_domaine": "Sensibilisation et formation",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 16,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 50,
+    "priorite_base": 2
+  },
+  {
+    "id_regle": 51,
+    "id_domaine": 15,
+    "nom_domaine": "Conformité légale & réglementaire",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 24,
+      "operateur": "<=",
+      "valeur": 1,
+      "et": {
+        "champ": "reglementations_applicables",
+        "contient": "rgpd"
+      }
+    },
+    "id_mesure": 51,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 52,
+    "id_domaine": 15,
+    "nom_domaine": "Conformité légale & réglementaire",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 24,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 52,
+    "priorite_base": 3
+  },
+  {
+    "id_regle": 53,
+    "id_domaine": 15,
+    "nom_domaine": "Conformité légale & réglementaire",
+    "id_regle_parent": null,
+    "condition": {
+      "id_question": 24,
+      "operateur": "<=",
+      "valeur": 1
+    },
+    "id_mesure": 53,
+    "priorite_base": 2
+  }
+]

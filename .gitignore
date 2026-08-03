@@ -1,0 +1,68 @@
+
+# --- Secrets / config locale (NE JAMAIS pousser) ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Environnements virtuels ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Base de données locale / dumps ---
+*.sqlite3
+*.db
+*.dump
+*.sql.bak
+
+# --- Modèles ML / caches téléchargés (gros volumes, à ne pas versionner) ---
+# cache Hugging Face (si jamais copié dans le repo par erreur)
+.cache/huggingface/
+**/models--*/
+*.bin
+*.safetensors
+*.gguf
+
+# --- Ollama (modèles locaux, ne pas versionner) ---
+.ollama/
+
+# --- OCR / fichiers temporaires de traitement PDF ---
+*.tmp
+backend/app/rag/tmp_pages/
+backend/app/rag/*.png
+
+# --- Frontend (React, Sprint 6 à venir) ---
+node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# --- Logs ---
+*.log
+logs/
+
+# --- OS / éditeurs ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# --- Fichiers volumineux sources (PDF du guide, à garder hors repo si volumineux) ---
+
+*.pdf

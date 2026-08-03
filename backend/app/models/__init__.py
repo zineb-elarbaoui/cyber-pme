@@ -1,0 +1,9 @@
+from app.models.domaine import Domaine  # noqa: F401
+from app.models.question import Question  # noqa: F401
+from app.models.mesure import Mesure  # noqa: F401
+from app.models.regle_experte import RegleExperte  # noqa: F401
+from app.models.pme_profil import PmeProfil  # noqa: F401
+from app.models.reponse import Reponse  # noqa: F401
+from app.models.recommandation import RecommandationGeneree  # noqa: F401
+from app.models.feedback import Feedback  # noqa: F401
+from app.models.guide_chunk import GuideChunk  # noqa: F401
