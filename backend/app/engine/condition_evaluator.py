@@ -1,22 +1,4 @@
-"""
-condition_evaluator.py
-=======================
-Évalue les conditions JSONB stockées dans regle_experte.condition contre
-un profil PME et ses réponses au questionnaire de maturité.
 
-Formats de condition supportés (issus de regles_expertes.json) :
-
-1. Condition simple sur une question :
-   {"id_question": 13, "operateur": "<=", "valeur": 1}
-
-2. Condition composée : question + critère supplémentaire sur le profil PME,
-   via une clause "et" qui teste soit une égalité, soit une appartenance :
-   {"id_question": 17, "operateur": "<=", "valeur": 1,
-    "et": {"champ": "traite_donnees_sensibles", "valeur": true}}
-
-   {"id_question": 24, "operateur": "<=", "valeur": 1,
-    "et": {"champ": "reglementations_applicables", "contient": "rgpd"}}
-"""
 
 from typing import Any, Dict
 

@@ -1,12 +1,3 @@
-"""
-recommender.py
-================
-Point d'entrée haut niveau du Sprint 3 : profil PME + réponses -> plan
-d'action priorisé (liste de recommandations triées par score décroissant).
-
-C'est ce module que l'API (Sprint 5) et la démo/notebook appelleront.
-"""
-
 from typing import Any, Dict, List
 
 from .rule_engine import RuleEngine

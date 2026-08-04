@@ -1,11 +1,4 @@
-"""
-Sprint 5 — Colle entre l'API et engine/recommender.py (Sprint 3) +
-services/rag_service.py (Sprint 4).
 
-generer_plan_action() attend une instance RuleEngine déjà construite (voir
-engine_service.py, chargée une fois au démarrage), plus reponses/profil en
-dicts Python simples — pas d'objets ORM directement.
-"""
 from typing import Dict, List
 from uuid import UUID
 
@@ -45,15 +38,7 @@ def _noms_domaines(db: Session) -> Dict[int, str]:
 def generer_recommandations_pour_pme(
     db: Session, id_pme: UUID, avec_justification_rag: bool = True
 ) -> List[dict]:
-    """
-    1. Charge le profil + les réponses depuis la DB.
-    2. Appelle le moteur de règles (Sprint 3, instance RuleEngine partagée).
-    3. Pour chaque recommandation déclenchée, appelle le RAG pour la
-       justification (désactivable pour tester le moteur seul sans Ollama).
-    4. Persiste chaque recommandation dans recommandation_generee.
-    5. Retourne la liste triée par score décroissant (déjà triée par
-       generer_plan_action, on ne retrie pas après persistance).
-    """
+    
     profil = db.query(PmeProfil).filter(PmeProfil.id_pme == id_pme).first()
     if profil is None:
         raise ValueError("PME introuvable")

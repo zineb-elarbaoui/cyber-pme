@@ -1,22 +1,3 @@
-"""
-rule_engine.py
-===============
-Moteur d'inférence : profil PME + réponses au questionnaire -> liste de
-règles expertes déclenchées.
-
-Politique règle mère / règle fille
------------------------------------
-Une règle fille (id_regle_parent non NULL) n'est retenue que si SA PROPRE
-condition est vérifiée ET si la condition de sa règle mère l'est également.
-
-Dans le corpus actuel (regles_expertes.json), la condition d'une règle fille
-est toujours un sur-ensemble de celle de sa mère (même condition de base +
-une clause "et" additionnelle sur le profil PME) : la vérification du parent
-est donc aujourd'hui redondante avec la condition propre de la fille. On la
-fait quand même explicitement pour rester robuste si le corpus évolue et
-qu'une fille en vient à avoir une condition divergente de sa mère.
-"""
-
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 

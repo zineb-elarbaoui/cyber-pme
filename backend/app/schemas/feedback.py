@@ -1,6 +1,3 @@
-"""
-Sprint 5 — Schémas Pydantic pour /feedback.
-"""
 from typing import Optional
 from uuid import UUID
 

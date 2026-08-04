@@ -1,6 +1,5 @@
 """
-Tests de base pour le router /questionnaire (lecture seule, données statiques
-de schema_pfa13.sql).
+Tests de base pour le router /questionnaire 
 """
 
 

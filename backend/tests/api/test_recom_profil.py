@@ -1,12 +1,4 @@
-"""
-Sprint 5 — Scénarios de profils PME contrastés, en complément de
-test_recommandations.py (qui couvre un seul profil : santé + données
-sensibles). Reprend l'esprit du rapport Sprint 3 (6 profils fictifs
-contrastés testés sur le moteur seul) mais via l'API bout en bout.
 
-Couvre la formulation exacte du livrable attendu :
-"Résultats de tests (Postman/pytest) sur 3-4 scénarios de profils différents"
-"""
 import pytest
 
 

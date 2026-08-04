@@ -1,16 +1,4 @@
-"""
-Sprint 5 — Colle entre l'API et le pipeline RAG du Sprint 4
-(app/rag/retriever.py + app/rag/justification_generator.py).
 
-Point important : retriever.py utilise psycopg2 brut (pas la session
-SQLAlchemy de l'API) et charge un SentenceTransformer. Les deux sont chers à
-recréer par requête : le modèle et la connexion sont donc chargés UNE FOIS au
-démarrage de l'app (voir main.py, lifespan) et réutilisés ici via un état
-partagé (RagContext), plutôt que d'appeler retriever.load_model() /
-get_connection() à chaque appel API.
-
-
-"""
 from dataclasses import dataclass
 from typing import Optional
 
@@ -20,8 +8,8 @@ from app.config import settings
 
 @dataclass
 class RagContext:
-    model: object  # SentenceTransformer, chargé une fois
-    conn: object    # connexion psycopg2, réutilisée (thread-safe : psycopg2 gère son propre lock interne par connexion ; en cas de charge concurrente élevée, passer à un pool - cf. note Sprint 6)
+    model: object  
+    conn: object    
 
 
 _rag_context: Optional[RagContext] = None
@@ -51,12 +39,7 @@ def generer_justification_pour_mesure(
     nom_domaine: str,
     section_guide_precise: str,
 ) -> str:
-    """
-    Point d'entrée unique utilisé par recommandation_service.py : récupère le
-    contexte pertinent du guide (retriever) puis génère la justification
-    (justification_generator), sans recharger le modèle ni rouvrir de
-    connexion à chaque appel.
-    """
+    
     ctx = get_rag_context()
     chunks = retriever.retrieve_context(
         ctx.conn, ctx.model, section_guide_precise, description_mesure

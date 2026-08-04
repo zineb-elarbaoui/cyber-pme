@@ -1,22 +1,3 @@
-"""
-PFA N°13 — Sprint 4 — embeddings.py
-
-Charge chunks.json (produit par chunking.py), calcule les embeddings avec
-un modèle multilingue local (pas de clé API), et les insère dans la table
-guide_chunk (pgvector).
-
-Modèle retenu : intfloat/multilingual-e5-base (768 dimensions).
-Les modèles de la famille E5 attendent un préfixe "passage: " pour le texte
-indexé et "query: " pour les requêtes de recherche — voir retriever.py.
-
-Usage :
-    python embeddings.py chunks.json \
-        --db-url postgresql://user:password@localhost:5432/pfa13_db
-
-Prérequis :
-    pip install sentence-transformers psycopg2-binary --break-system-packages
-"""
-
 import argparse
 import json
 import sys

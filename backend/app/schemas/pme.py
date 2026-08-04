@@ -1,10 +1,3 @@
-"""
-Sprint 5 — Schémas Pydantic pour /profil.
-
-Les enums reprennent exactement les CHECK constraints de pme_profil dans
-schema_pfa13.sql — toute valeur hors de cette liste est rejetée par l'API
-avant même d'atteindre la base (double sécurité avec les CHECK SQL).
-"""
 from datetime import date
 from enum import Enum
 from typing import List, Optional

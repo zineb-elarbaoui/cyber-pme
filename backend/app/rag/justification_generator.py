@@ -1,25 +1,3 @@
-"""
-PFA N°13 — Sprint 4 — justification_generator.py
-
-Étant donné une recommandation (mesure + règle déclenchée) et les passages du
-guide récupérés par retriever.py, génère une justification en français en
-s'appuyant STRICTEMENT sur les passages fournis (pas d'invention).
-
-LLM utilisé : Ollama en local (gratuit, pas de clé API, pas de dépendance
-réseau externe une fois le modèle téléchargé).
-
-Prérequis :
-    1. Installer Ollama : https://ollama.com/download
-    2. Télécharger un modèle qui gère bien le français, ex :
-         ollama pull llama3.1:8b
-       (si ta machine a peu de RAM, essaie plutôt : ollama pull mistral:7b-instruct)
-    3. Lancer le serveur Ollama (généralement automatique après installation,
-       sinon : `ollama serve`) — il écoute par défaut sur http://localhost:11434
-
-Usage autonome (test) :
-    python justification_generator.py
-"""
-
 import json
 import sys
 
@@ -79,11 +57,7 @@ def call_ollama(prompt: str, model: str = MODEL_NAME) -> str:
 
 
 def generer_justification(titre_mesure, description_mesure, nom_domaine, chunks):
-    """
-    Point d'entrée à appeler depuis recommender.py (Sprint 3) pour enrichir
-    chaque recommandation générée avec le champ justification_rag de la table
-    recommandation_generee.
-    """
+    
     if not chunks:
         return (
             "Aucun passage du guide n'a pu être associé à cette mesure — "
@@ -101,8 +75,7 @@ def generer_justification(titre_mesure, description_mesure, nom_domaine, chunks)
 
 
 def _test_manuel():
-    """Petit test avec des données factices, sans dépendre de la DB, pour
-    vérifier que la connexion à Ollama fonctionne avant de brancher le reste."""
+    
     chunks_test = [
         {
             "section_guide": "3.5.1",

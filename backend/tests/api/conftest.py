@@ -1,19 +1,4 @@
-"""
-Fixtures partagées pour les tests d'endpoints FastAPI (Sprint 5).
 
-Contrairement à test_rule_engine.py/test_scoring.py (Sprint 3, moteur en
-mémoire pur), ces tests passent par le vrai TestClient + lifespan de l'app :
-RuleEngine réel (53 règles), connexion RAG réelle. `?avec_rag=false` est
-utilisé partout où on n'a pas besoin de valider le pipeline RAG lui-même,
-pour ne pas dépendre d'Ollama à chaque run de la suite.
-
-Lancer uniquement ces tests :
-    python -m pytest tests/api/ -v
-
-Prérequis : la DB de dev (schema_pfa13.sql + guide_chunk) doit être
-accessible via DATABASE_URL (.env) au moment du run — ce sont des tests
-d'intégration légers, pas des tests unitaires purs isolés de la DB.
-"""
 import pytest
 from fastapi.testclient import TestClient
 

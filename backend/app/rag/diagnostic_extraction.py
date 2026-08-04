@@ -1,17 +1,4 @@
-"""
-PFA N°13 — Sprint 4 — diagnostic_extraction.py
 
-Script de diagnostic UNIQUEMENT : compare deux méthodes d'extraction de texte
-PDF (pdfplumber vs PyMuPDF) pour identifier laquelle produit un texte lisible
-sur TON exemplaire du guide. À lancer une seule fois, pas un composant du
-pipeline final.
-
-Prérequis :
-    pip install pymupdf --break-system-packages
-
-Usage :
-    python diagnostic_extraction.py "C:\\chemin\\vers\\ton_guide.pdf"
-"""
 
 import sys
 from pathlib import Path

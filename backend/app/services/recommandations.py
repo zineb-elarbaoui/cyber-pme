@@ -1,9 +1,4 @@
-"""
-Sprint 5 — Colle entre l'API et app/engine/recommender.py (Sprint 3) +
-app/services/rag_service.py (Sprint 4).
 
-
-"""
 from typing import List
 from uuid import UUID
 
@@ -35,16 +30,7 @@ def _profil_vers_dict(profil: PmeProfil) -> dict:
 def generer_recommandations_pour_pme(
     db: Session, id_pme: UUID, avec_justification_rag: bool = True
 ) -> List[dict]:
-    """
-    1. Charge le profil + les réponses depuis la DB (session SQLAlchemy).
-    2. Appelle le moteur de règles (Sprint 3) en mémoire.
-    3. Pour chaque recommandation déclenchée, appelle le RAG pour la
-       justification (optionnel — désactivable si Ollama n'est pas dispo,
-       ex. pour des tests rapides sans dépendance externe).
-    4. Persiste chaque recommandation dans recommandation_generee.
-    5. Retourne la liste triée par score décroissant, prête pour le schéma
-       PlanActionOut.
-    """
+    
     profil = db.query(PmeProfil).filter(PmeProfil.id_pme == id_pme).first()
     if profil is None:
         raise ValueError("PME introuvable")

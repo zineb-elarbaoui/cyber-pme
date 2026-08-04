@@ -1,6 +1,4 @@
-"""
-Sprint 5 — Schémas Pydantic pour /recommandations.
-"""
+
 from typing import List, Optional
 from uuid import UUID
 

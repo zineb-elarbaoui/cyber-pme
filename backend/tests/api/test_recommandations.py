@@ -1,9 +1,6 @@
 """
 Tests de base pour le router /recommandations.
 
-`avec_rag=false` partout : on teste ici l'intégration API <-> moteur de
-règles réel, pas le pipeline RAG (qui dépend d'Ollama, testé séparément si
-besoin, hors scope "tests de base" du Sprint 5).
 """
 import uuid
 

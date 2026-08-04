@@ -1,24 +1,3 @@
-"""
-PFA N°13 — Sprint 4 — retriever.py
-
-Étant donné une mesure/règle (avec sa section_guide_precise) et/ou une requête
-en texte libre, retrouve les passages du guide les plus pertinents dans
-guide_chunk (pgvector), pour servir de contexte au LLM de justification.
-
-Stratégie de récupération (cf. rapport Sprint 3, logique de traçabilité) :
-  1. Priorité aux chunks dont section_guide correspond exactement ou est un
-     préfixe de la section_guide_precise de la mesure (ex: mesure en '3.1.2'
-     -> chunk en '3.1.2' ou '3.1').
-  2. Complément par similarité sémantique (recherche vectorielle) sur la
-     description de la mesure, pour couvrir les cas où le guide n'a pas de
-     section dédiée (cf. domaines 4/12 rattachés par proximité thématique)
-     ou pour enrichir le contexte au-delà de la seule section exacte.
-
-Usage (exemple autonome, hors intégration avec recommender.py) :
-    python retriever.py --db-url postgresql://... \
-        --section 3.5.1 \
-        --texte "Mettre en place une procédure de sauvegarde régulière et testée"
-"""
 
 import argparse
 import sys

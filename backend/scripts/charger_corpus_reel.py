@@ -1,27 +1,4 @@
-"""
-Sprint 5 — À lancer UNE FOIS pour remplacer les 2 lignes de démo de
-schema_pfa13.sql par le vrai corpus (53 mesures, 53 règles).
 
-Pourquoi ce script existe : le RuleEngine (Sprint 3) charge regles_expertes.json
-et mesures.json directement en mémoire — il n'a jamais touché la table
-regle_experte/mesure en base. Tant que ces deux tables ne contiennent que les
-2 lignes de démo du schéma, toute recommandation déclenchée par une règle du
-vrai corpus (id_regle 3 à 53) fait planter la FK
-recommandation_generee.id_regle -> regle_experte.id_regle.
-
-Ce script insère les lignes avec des id_mesure/id_regle EXPLICITES
-(identiques à ceux du JSON), pas des id auto-générés par les séquences
-SERIAL — sinon plus aucune garantie que le JSON et la base pointent vers les
-mêmes numéros.
-
-Usage (depuis backend/, venv activé) :
-    python scripts/charger_corpus_reel.py
-
-⚠️ Ce script fait un TRUNCATE ... CASCADE sur mesure/regle_experte (et donc
-sur recommandation_generee/feedback qui en dépendent par FK) avant de
-recharger — à ne PAS lancer sur une base contenant des données PME réelles
-que tu veux garder (uniquement adapté au dev/tests actuels).
-"""
 import json
 import sys
 from pathlib import Path

@@ -1,17 +1,3 @@
-"""
-test_rule_engine.py
-=====================
-Tests du Sprint 3 : évaluation des conditions JSONB et moteur d'inférence
-(gestion des règles simples, composées, et de la hiérarchie mère/fille).
-
-Deux niveaux de tests :
-1. Tests unitaires sur un corpus de règles synthétique, minimal et
-   contrôlé -> isolent la logique du moteur des données réelles.
-2. Test d'intégration sur le vrai corpus (mesures.json + regles_expertes.json)
-   -> vérifie que le moteur se comporte correctement sur les données de
-   production, en particulier les trois couples mère/fille existants
-   (règles 3/4, 22/23, 31/32).
-"""
 
 import json
 from pathlib import Path
@@ -22,9 +8,6 @@ from app.engine.condition_evaluator import evaluate_condition, ConditionEvaluati
 from app.engine.rule_engine import RuleEngine
 
 
-# ---------------------------------------------------------------------------
-# 1. condition_evaluator — conditions simples
-# ---------------------------------------------------------------------------
 
 def test_condition_simple_satisfaite():
     condition = {"id_question": 10, "operateur": "<=", "valeur": 1}
@@ -73,9 +56,6 @@ def test_valeur_reponse_non_numerique_leve_erreur():
         evaluate_condition(condition, {10: "non_numerique"}, {})
 
 
-# ---------------------------------------------------------------------------
-# 2. condition_evaluator — clause "et" (composée)
-# ---------------------------------------------------------------------------
 
 def test_clause_et_valeur_satisfaite(profil_sensible):
     condition = {
@@ -136,9 +116,6 @@ def test_clause_et_mal_formee_leve_erreur(profil_sensible):
         evaluate_condition(condition, {24: 1}, profil_sensible)
 
 
-# ---------------------------------------------------------------------------
-# 3. RuleEngine — corpus synthétique (isolation de la logique mère/fille)
-# ---------------------------------------------------------------------------
 
 @pytest.fixture
 def mesures_synthetiques():
@@ -286,10 +263,6 @@ def test_cache_evite_reevaluation_multiple(regles_synthetiques, mesures_syntheti
     assert ids == {1, 2, 4}
 
 
-# ---------------------------------------------------------------------------
-# 4. RuleEngine — intégration sur le vrai corpus (mesures.json / regles_expertes.json)
-# ---------------------------------------------------------------------------
-
 @pytest.fixture(scope="module")
 def vraies_donnees():
     """
@@ -302,9 +275,9 @@ def vraies_donnees():
     """
     backend_dir = Path(__file__).resolve().parent.parent
     candidats = [
-        backend_dir.parent / "database" / "seeds",  # cyber-pme/database/seeds/ (structure repo)
-        backend_dir / "database" / "seeds",          # variante si database/ est sous backend/
-        Path("/mnt/project"),                        # environnement de dev Claude
+        backend_dir.parent / "database" / "seeds",  
+        backend_dir / "database" / "seeds",          
+        Path("/mnt/project"),                        
     ]
 
     seeds_dir = next((c for c in candidats if (c / "mesures.json").exists()), None)

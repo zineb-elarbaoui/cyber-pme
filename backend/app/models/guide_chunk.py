@@ -1,18 +1,3 @@
-"""
-ATTENTION : table absente de schema_pfa13.sql — à ajouter avant de lancer l'API :
-
-    CREATE TABLE guide_chunk (
-        id_chunk        SERIAL PRIMARY KEY,
-        section_guide   VARCHAR(20) NOT NULL,
-        titre_section   VARCHAR(200),
-        texte           TEXT NOT NULL,
-        embedding       vector(768) NOT NULL,
-        ordre           INTEGER NOT NULL
-    );
-    CREATE INDEX idx_guide_chunk_section ON guide_chunk(section_guide);
-
-Nécessite : pip install pgvector --break-system-packages
-"""
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import Column, Integer, String, Text
 

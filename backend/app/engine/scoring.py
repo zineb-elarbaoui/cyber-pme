@@ -1,30 +1,3 @@
-"""
-scoring.py
-===========
-Calcule score_priorite pour une recommandation générée par le moteur de
-règles (table recommandation_generee.score_priorite, NUMERIC(5,2)).
-
-
-
-Formule
--------
-    score_priorite = priorite_base_regle
-                      x poids_impact(mesure)
-                      x multiplicateur_contexte(reponses Q1-Q9)
-                      x pertinence_secteur(mesure, profil)   [optionnel]
-
-- priorite_base_regle (1-5) : gravité intrinsèque de la règle, fixée
-  manuellement lors de la constitution du corpus expert.
-- poids_impact : dérivé de mesure.impact (faible/moyen/eleve/tres_eleve).
-- multiplicateur_contexte : dérivé des réponses Q1-Q9 (échelle 0-3,
-  ISO/IEC 21827), qui mesurent l'impact/le risque du SI de la PME. Plus le
-  contexte est risqué, plus toutes les recommandations sont priorisées.
-- pertinence_secteur : bonus modéré (x1.2) pour les secteurs jugés sensibles
-  (santé, finance/assurance) ou quand traite_donnees_sensibles=true, mais
-  uniquement sur les mesures à impact élevé/très élevé. Désactivable via
-  appliquer_pertinence_secteur=False.
-"""
-
 from typing import Any, Dict
 
 POIDS_IMPACT = {

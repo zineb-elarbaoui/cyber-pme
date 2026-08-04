@@ -1,10 +1,3 @@
-"""
-test_scoring.py
-=================
-Tests du Sprint 3 : chaque facteur de la formule de score_priorite est testé
-isolément, puis la formule complète est vérifiée avec des valeurs connues
-pour détecter toute régression sur les coefficients (POIDS_IMPACT, etc.).
-"""
 
 import pytest
 
@@ -16,9 +9,7 @@ from app.engine.scoring import (
 )
 
 
-# ---------------------------------------------------------------------------
-# multiplicateur_contexte (réponses Q1-Q9, échelle 0-3)
-# ---------------------------------------------------------------------------
+
 
 def test_contexte_aucune_reponse_est_neutre():
     assert multiplicateur_contexte({}) == 1.0
@@ -60,9 +51,6 @@ def test_contexte_ignore_valeurs_non_numeriques():
     assert multiplicateur_contexte(reponses) == 2.0  # seule Q2=3 est retenue
 
 
-# ---------------------------------------------------------------------------
-# pertinence_secteur
-# ---------------------------------------------------------------------------
 
 def test_pertinence_secteur_sensible_et_impact_tres_eleve():
     mesure = {"impact": "tres_eleve"}
@@ -95,9 +83,6 @@ def test_pertinence_secteur_neutre_si_impact_moyen():
     assert pertinence_secteur(mesure, profil) == 1.0
 
 
-# ---------------------------------------------------------------------------
-# calculer_score_priorite (formule complète)
-# ---------------------------------------------------------------------------
 
 def test_score_formule_complete_cas_neutre():
     """

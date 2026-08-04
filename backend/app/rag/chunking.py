@@ -1,33 +1,10 @@
-"""
-PFA N°13 — Sprint 4 — chunking.py
-
-Découpe le guide CMRPI/AUSIM en passages ("chunks") traçables à une section
-numérotée (ex: '3.1.2'), pour permettre au retriever de retrouver précisément
-les passages liés à une mesure/règle (via mesure.section_guide_precise).
-
-Usage :
-    python chunking.py /chemin/vers/guide_cmrpi_ausim.pdf --out chunks.json
-    python chunking.py /chemin/vers/guide_cmrpi_ausim.docx --out chunks.json
-
-Formats supportés : .pdf, .docx, .txt
-
-IMPORTANT — à adapter à ton document réel :
-Le découpage repose sur une détection par regex des en-têtes de section du type
-"3.1.2 Les virus, antivirus et firewall". Le format exact des titres dans TON
-exemplaire du guide (numérotation, espacement, majuscules) peut différer.
-Si le chunking produit peu ou pas de sections détectées, inspecte la sortie
-`chunks.json` et ajuste SECTION_HEADER_REGEX ci-dessous en conséquence — c'est
-la seule partie de ce script qui dépend du formatage réel du document.
-"""
-
 import argparse
 import json
 import re
 import sys
 from pathlib import Path
 
-# Chemin vers tesseract.exe si l'OCR est utilisé (--ocr). Adapte si tu as
-# installé Tesseract ailleurs que le chemin par défaut.
+
 TESSERACT_CMD_WINDOWS = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # Détecte les en-têtes du type "3.1.2 Titre de la section" ou "5.2 Titre"
