@@ -1,31 +1,109 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
-import { recommendations } from "@/lib/mock-data";
 import { PriorityBadge, MetaBadge, DomainTag } from "@/components/cyber/Badges";
-import { ArrowLeft, BookOpen, MessageSquare, Star, ThumbsUp, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, BookOpen, MessageSquare, Star, ThumbsUp, CheckCircle2, Loader2 } from "lucide-react";
+import { getRecommandations, envoyerFeedback, ApiError } from "@/lib/api";
+import { useWizard } from "@/lib/wizard-context";
+import { priorityBucket } from "@/lib/maturity";
 
 export const Route = createFileRoute("/recommendation/$id")({
-  loader: ({ params }) => {
-    const rec = recommendations.find((r) => r.id === params.id);
-    if (!rec) throw notFound();
-    return { rec };
-  },
   component: RecommendationDetail,
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: loaderData ? `${loaderData.rec.title} — CyberDiag` : "Recommandation — CyberDiag" },
-      { name: "robots", content: "noindex" },
-    ],
-  }),
+  head: () => ({ meta: [{ name: "robots", content: "noindex" }] }),
 });
 
 function RecommendationDetail() {
-  const { rec } = Route.useLoaderData();
+  const { id } = Route.useParams();
+  const nav = useNavigate();
+  const { state } = useWizard();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  // Réutilise le cache déjà peuplé par /results (même queryKey) — évite de
+  // relancer tout le moteur de règles + RAG juste pour afficher le détail
+  // d'une seule recommandation déjà générée. staleTime: Infinity empêche un
+  // refetch automatique tant que le cache existe.
+  const recommandationsQ = useQuery({
+    queryKey: ["recommandations", state.idPme],
+    queryFn: () => getRecommandations(state.idPme as string, true),
+    enabled: mounted && !!state.idPme,
+    staleTime: Infinity,
+  });
+
+  const rec = useMemo(() => {
+    const list = recommandationsQ.data?.recommandations ?? [];
+    const found = list.find((r) => r.id_recommandation === id);
+    if (!found) return null;
+    return {
+      id: found.id_recommandation,
+      title: found.titre_mesure,
+      domainName: found.nom_domaine,
+      priority: priorityBucket(found.score_priorite),
+      scorePriorite: found.score_priorite,
+      cost: found.cout_estime,
+      difficulty: found.difficulte_estimee,
+      impact: found.impact,
+      guideRef: `Guide CMRPI/AUSIM — §${found.section_guide_precise}`,
+      description: found.description_mesure,
+      rationale: found.justification_rag,
+    };
+  }, [recommandationsQ.data, id]);
+
   const [rating, setRating] = useState(0);
   const [applied, setApplied] = useState<string | null>(null);
   const [comment, setComment] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  async function handleSubmitFeedback() {
+    if (!rec || rating === 0) return;
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      await envoyerFeedback({
+        id_recommandation: rec.id,
+        note_pertinence: rating,
+        commentaire: comment || undefined,
+        recommandation_appliquee: applied === "Déjà appliquée" || applied === "En cours",
+      });
+      setSubmitted(true);
+    } catch (e) {
+      setSubmitError(e instanceof ApiError ? e.message : "Erreur lors de l'envoi du feedback.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  if (!mounted || recommandationsQ.isLoading) {
+    return (
+      <AppShell crumbs={[{ label: "Résultats", to: "/results" }]}>
+        <div className="flex min-h-[50vh] items-center justify-center gap-2 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" /> Chargement…
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (!state.idPme || recommandationsQ.isError || !rec) {
+    return (
+      <AppShell crumbs={[{ label: "Résultats", to: "/results" }]}>
+        <div className="mx-auto max-w-lg px-6 py-20 text-center">
+          <p className="text-sm text-muted-foreground">
+            Recommandation introuvable — le rapport n'est peut-être plus en cache.
+          </p>
+          <button
+            onClick={() => nav({ to: "/results" })}
+            className="mt-4 inline-flex items-center gap-1.5 rounded-md bg-primary px-3.5 py-2 text-sm font-medium text-primary-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" /> Retour au rapport
+          </button>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell crumbs={[{ label: "Résultats", to: "/results" }, { label: rec.domainName }, { label: rec.title }]}>
@@ -40,7 +118,6 @@ function RecommendationDetail() {
             <DomainTag>{rec.domainName}</DomainTag>
           </div>
           <h1 className="mt-3 font-display text-3xl font-semibold leading-tight tracking-tight">{rec.title}</h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{rec.summary}</p>
           <div className="mt-5 flex flex-wrap gap-1.5">
             <MetaBadge label="Coût" value={rec.cost} />
             <MetaBadge label="Difficulté" value={rec.difficulty} />
@@ -56,30 +133,13 @@ function RecommendationDetail() {
             </Panel>
 
             <Panel title="Pourquoi cette recommandation" icon={BookOpen} accent>
-              <p className="text-sm leading-relaxed text-foreground/85">{rec.rationale}</p>
-              <blockquote className="mt-4 border-l-2 border-primary/40 bg-secondary/50 pl-4 py-2 text-sm italic text-muted-foreground">
-                « Toute PME exposée à Internet doit protéger ses accès à privilèges par une authentification à deux facteurs. »
-                <cite className="mt-1 block text-[11px] not-italic font-semibold uppercase tracking-wider text-foreground/60">
-                  — {rec.guideRef}
-                </cite>
-              </blockquote>
-            </Panel>
-
-            <Panel title="Étapes de mise en œuvre">
-              <ol className="space-y-3">
-                {[
-                  "Identifier les comptes critiques (admin, messagerie, VPN, SaaS).",
-                  "Choisir une solution MFA (authenticator app, clé physique FIDO2).",
-                  "Piloter avec 3 utilisateurs, documenter la procédure d'enrôlement.",
-                  "Déployer à l'ensemble des collaborateurs concernés.",
-                  "Mettre en place une procédure de récupération sécurisée.",
-                ].map((s, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-display text-[11px] font-semibold text-primary">{i + 1}</span>
-                    <span className="text-sm text-foreground/85">{s}</span>
-                  </li>
-                ))}
-              </ol>
+              {rec.rationale ? (
+                <p className="text-sm leading-relaxed text-foreground/85">{rec.rationale}</p>
+              ) : (
+                <p className="text-sm italic text-muted-foreground">
+                  Justification non disponible (générée sans RAG, ou aucun passage du guide n'a pu être associé à cette mesure).
+                </p>
+              )}
             </Panel>
 
             {/* Feedback */}
@@ -129,12 +189,18 @@ function RecommendationDetail() {
                       className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/25"
                     />
                   </div>
+                  {submitError && (
+                    <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs text-destructive">
+                      {submitError}
+                    </div>
+                  )}
                   <button
-                    onClick={() => setSubmitted(true)}
-                    disabled={rating === 0}
+                    onClick={handleSubmitFeedback}
+                    disabled={rating === 0 || submitting}
                     className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3.5 py-2 text-sm font-medium text-primary-foreground shadow-elegant transition hover:opacity-95 disabled:opacity-40"
                   >
-                    <ThumbsUp className="h-4 w-4" /> Envoyer mon feedback
+                    {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ThumbsUp className="h-4 w-4" />}
+                    Envoyer mon feedback
                   </button>
                 </div>
               )}
@@ -144,18 +210,21 @@ function RecommendationDetail() {
           <aside className="space-y-4">
             <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
               <div className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground">Score de priorité</div>
-              <div className="mt-1 font-display text-3xl font-semibold tabular-nums">92<span className="text-sm text-muted-foreground">/100</span></div>
-              <div className="mt-3 space-y-2 text-xs">
-                <ScoreLine label="Urgence" value={95} />
-                <ScoreLine label="Impact" value={90} />
-                <ScoreLine label="Faisabilité" value={88} />
+              <div className="mt-1 font-display text-3xl font-semibold tabular-nums">
+                {rec.scorePriorite.toFixed(1)}
               </div>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Priorité de base × poids d'impact × contexte de risque {"("}Q1–Q9{")"} × pertinence sectorielle
+                — méthodologie qualitative du projet (Sprint 3), non issue du guide.
+              </p>
             </div>
             <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
               <div className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground">Source</div>
               <div className="mt-1 text-sm font-semibold">{rec.guideRef}</div>
               <p className="mt-2 text-xs text-muted-foreground">
-                Passage extrait par le moteur RAG à partir du guide officiel indexé (pgvector).
+                {rec.rationale
+                  ? "Justification générée par le pipeline RAG (Ollama) à partir des passages du guide indexés dans pgvector."
+                  : "Recommandation déclenchée par le moteur de règles expertes ; justification RAG non générée pour cet appel."}
               </p>
             </div>
           </aside>
@@ -173,20 +242,6 @@ function Panel({ title, icon: Icon, children, accent }: { title: string; icon?: 
         <h2 className="font-display text-base font-semibold">{title}</h2>
       </div>
       {children}
-    </div>
-  );
-}
-
-function ScoreLine({ label, value }: { label: string; value: number }) {
-  return (
-    <div>
-      <div className="mb-1 flex items-center justify-between">
-        <span className="text-muted-foreground">{label}</span>
-        <span className="tabular-nums font-semibold text-foreground">{value}</span>
-      </div>
-      <div className="h-1.5 rounded-full bg-secondary">
-        <div className="h-full rounded-full bg-primary" style={{ width: `${value}%` }} />
-      </div>
     </div>
   );
 }

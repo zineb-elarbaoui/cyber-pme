@@ -8,13 +8,23 @@ from app.database import get_db
 from app.models.pme_profil import PmeProfil
 from app.models.reponse import Reponse
 from app.schemas.pme import PmeProfilCreate, PmeProfilOut, ReponseBulkCreate, ReponseOut
+from app.services.auth_service import hash_password  
 
 router = APIRouter(prefix="/profil", tags=["profil"])
 
 
 @router.post("", response_model=PmeProfilOut, status_code=201)
 def creer_profil(payload: PmeProfilCreate, db: Session = Depends(get_db)):
-    profil = PmeProfil(**payload.model_dump())
+    data = payload.model_dump()
+
+    # Le hash remplace le mot de passe en clair — jamais stocké tel quel,
+    # et jamais renvoyé par l'API (PmeProfilOut ne déclare pas ce champ).
+    mot_de_passe_clair = data.pop("mot_de_passe")
+
+    if db.query(PmeProfil).filter(PmeProfil.email == data["email"]).first():
+        raise HTTPException(status_code=409, detail="Un compte existe déjà avec cet email.")
+
+    profil = PmeProfil(**data, mot_de_passe_hash=hash_password(mot_de_passe_clair))
     db.add(profil)
     db.commit()
     db.refresh(profil)
@@ -37,7 +47,7 @@ def soumettre_reponses(id_pme: UUID, payload: ReponseBulkCreate, db: Session = D
 
     reponses_creees = []
     for r in payload.reponses:
-        # upsert simple : une PME répond une fois par question (UNIQUE id_pme+id_question)
+        
         existante = (
             db.query(Reponse)
             .filter(Reponse.id_pme == id_pme, Reponse.id_question == r.id_question)

@@ -1,11 +1,12 @@
 import json
 import sys
+import time
 
 import urllib.request
 import urllib.error
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "llama3.2:3b"  # modèle léger (~2 Go) ; remplace par "qwen2.5:1.5b" si besoin de plus léger encore, ou "mistral:7b-instruct" si plus de RAM disponible
+OLLAMA_URL = "http://127.0.0.1:11434/api/generate"  
+MODEL_NAME = "llama3.2:3b"
 
 PROMPT_TEMPLATE = """Tu es un assistant qui rédige des justifications courtes et factuelles \
 pour un outil de diagnostic de cybersécurité destiné aux PME marocaines.
@@ -37,18 +38,32 @@ def format_passages(chunks):
 
 
 def call_ollama(prompt: str, model: str = MODEL_NAME) -> str:
+    print(f"[RAG DEBUG] Appel Ollama sur {OLLAMA_URL} (modèle={model})...", flush=True)
+    debut = time.time()
     payload = json.dumps(
-        {"model": model, "prompt": prompt, "stream": False, "options": {"temperature": 0.2}}
+        {
+            "model": model,
+            "prompt": prompt,
+            "stream": False,
+            "options": {
+                "temperature": 0.2,
+                "num_predict": 200,  # borne la longueur générée (2-3 phrases demandées) -> accélère nettement
+            },
+        }
     ).encode("utf-8")
 
     req = urllib.request.Request(
         OLLAMA_URL, data=payload, headers={"Content-Type": "application/json"}
     )
     try:
-        with urllib.request.urlopen(req, timeout=120) as resp:
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            duree = time.time() - debut
+            print(f"[RAG DEBUG] Réponse Ollama reçue en {duree:.1f}s, lecture...", flush=True)
             data = json.loads(resp.read().decode("utf-8"))
+            print("[RAG DEBUG] Justification générée avec succès.", flush=True)
             return data.get("response", "").strip()
     except urllib.error.URLError as e:
+        print(f"[RAG DEBUG] Échec de connexion à Ollama : {e}", flush=True)
         sys.exit(
             f"Impossible de joindre Ollama sur {OLLAMA_URL} ({e}). "
             "Vérifie qu'Ollama tourne (`ollama serve`) et que le modèle est "
@@ -57,8 +72,10 @@ def call_ollama(prompt: str, model: str = MODEL_NAME) -> str:
 
 
 def generer_justification(titre_mesure, description_mesure, nom_domaine, chunks):
-    
+    print(f"[RAG DEBUG] generer_justification appelé pour : {titre_mesure!r} ({len(chunks)} chunk(s))", flush=True)
+
     if not chunks:
+        print("[RAG DEBUG] Aucun chunk fourni -> justification générique renvoyée sans appel LLM.", flush=True)
         return (
             "Aucun passage du guide n'a pu être associé à cette mesure — "
             "justification non générée (voir limite documentée : couverture "
@@ -75,7 +92,6 @@ def generer_justification(titre_mesure, description_mesure, nom_domaine, chunks)
 
 
 def _test_manuel():
-    
     chunks_test = [
         {
             "section_guide": "3.5.1",

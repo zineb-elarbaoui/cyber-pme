@@ -13,6 +13,7 @@ class PmeProfil(Base):
 
     id_pme = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nom_entreprise = Column(String(200), nullable=False)
+    email = Column(String(255), nullable=False, unique=True)  
     secteur_activite = Column(String(30), nullable=False)
     taille_effectif = Column(String(20), nullable=False)
     chiffre_affaires_annuel = Column(String(20), nullable=False)
@@ -24,6 +25,7 @@ class PmeProfil(Base):
     budget_cybersecurite = Column(String(20), nullable=False)
     reglementations_applicables = Column(ARRAY(String), nullable=True)
     date_evaluation = Column(Date, server_default=func.current_date())
+    mot_de_passe_hash = Column(String(255), nullable=True)  # nouveau — nullable pour ne pas casser les profils déjà créés sans mdp
 
     reponses = relationship("Reponse", back_populates="pme", cascade="all, delete-orphan")
     recommandations = relationship("RecommandationGeneree", back_populates="pme", cascade="all, delete-orphan")

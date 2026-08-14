@@ -1,32 +1,4 @@
-"""
-Sprint 5 — Proposition d'intégration dans main.py.
 
-Je n'ai pas le contenu de ton main.py/database.py/config.py actuels, donc je
-ne les écrase pas : ce fichier est un GABARIT à fusionner à la main. Les
-points essentiels à récupérer :
-
-1. Le lifespan qui appelle init_rag_context() UNE FOIS au démarrage
-   (charge le SentenceTransformer + ouvre la connexion psycopg2 du retriever).
-2. Le montage des 4 routers du Sprint 5.
-
-Si ton database.py n'a pas encore de `Base` déclarative SQLAlchemy (utilisée
-par app/models/*), il faut l'y ajouter :
-
-    from sqlalchemy.orm import declarative_base
-    Base = declarative_base()
-
-Et un get_db() classique :
-
-    def get_db():
-        db = SessionLocal()
-        try:
-            yield db
-        finally:
-            db.close()
-
-Et dans config.py, s'assurer qu'il existe bien `settings.DATABASE_URL`
-(utilisé par rag_service.init_rag_context()).
-"""
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -34,6 +6,9 @@ from fastapi import FastAPI
 from app.routers import profil, questionnaire, recommandations, feedback
 from app.services.rag_service import init_rag_context
 from app.services.engine_service import init_engine
+from app.routers import auth
+from fastapi.middleware.cors import CORSMiddleware
+
 
 
 @asynccontextmanager
@@ -55,10 +30,20 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(profil.router)
 app.include_router(questionnaire.router)
 app.include_router(recommandations.router)
 app.include_router(feedback.router)
+
+app.include_router(auth.router)
 
 
 @app.get("/health", tags=["health"])

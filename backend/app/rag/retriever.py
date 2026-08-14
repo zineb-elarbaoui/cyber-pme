@@ -1,4 +1,3 @@
-
 import argparse
 import sys
 
@@ -19,8 +18,10 @@ def load_model():
 
 
 def embed_query(model, texte: str):
+    print(f"[RAG DEBUG] Embedding de la requête : '{texte[:60]}...'", flush=True)
     # préfixe "query: " requis par les modèles E5 côté requête (différent de "passage: ")
     vec = model.encode([f"query: {texte}"], normalize_embeddings=True)[0]
+    print("[RAG DEBUG] Embedding terminé.", flush=True)
     return vec.tolist()
 
 
@@ -35,6 +36,7 @@ def retrieve_by_section(conn, section_guide_precise: str, top_k: int = TOP_K_SEC
     Récupère les chunks dont section_guide correspond exactement ou est un
     préfixe hiérarchique de section_guide_precise (ex: '3.1' matche '3.1.2').
     """
+    print(f"[RAG DEBUG] retrieve_by_section({section_guide_precise!r})...", flush=True)
     cur = conn.cursor()
     cur.execute(
         """
@@ -49,6 +51,7 @@ def retrieve_by_section(conn, section_guide_precise: str, top_k: int = TOP_K_SEC
     )
     rows = cur.fetchall()
     cur.close()
+    print(f"[RAG DEBUG] retrieve_by_section -> {len(rows)} résultat(s).", flush=True)
     return [
         {"id_chunk": r[0], "section_guide": r[1], "titre_section": r[2], "texte": r[3], "source": "section"}
         for r in rows
@@ -59,6 +62,7 @@ def retrieve_by_similarity(conn, model, texte_requete: str, top_k: int = TOP_K_S
     exclude_ids = exclude_ids or []
     query_vec = embed_query(model, texte_requete)
 
+    print("[RAG DEBUG] Requête pgvector (similarité)...", flush=True)
     cur = conn.cursor()
     if exclude_ids:
         cur.execute(
@@ -85,6 +89,7 @@ def retrieve_by_similarity(conn, model, texte_requete: str, top_k: int = TOP_K_S
         )
     rows = cur.fetchall()
     cur.close()
+    print(f"[RAG DEBUG] retrieve_by_similarity -> {len(rows)} résultat(s).", flush=True)
     return [
         {
             "id_chunk": r[0],
@@ -104,12 +109,14 @@ def retrieve_context(conn, model, section_guide_precise: str, texte_mesure: str)
     Retourne une liste de chunks dédupliquée, prête à être injectée dans le
     prompt du LLM (justification_generator.py).
     """
+    print(f"[RAG DEBUG] retrieve_context démarré pour section={section_guide_precise!r}", flush=True)
     chunks_section = retrieve_by_section(conn, section_guide_precise)
     ids_deja_trouves = [c["id_chunk"] for c in chunks_section]
 
     chunks_semantiques = retrieve_by_similarity(
         conn, model, texte_mesure, exclude_ids=ids_deja_trouves
     )
+    print("[RAG DEBUG] retrieve_context terminé.", flush=True)
 
     return chunks_section + chunks_semantiques
 

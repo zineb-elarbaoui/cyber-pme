@@ -3,7 +3,7 @@ from enum import Enum
 from typing import List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
 
 
 class SecteurActivite(str, Enum):
@@ -54,7 +54,7 @@ class BudgetCybersecurite(str, Enum):
     structure = "structure"
 
 
-class PmeProfilCreate(BaseModel):
+class PmeProfilBase(BaseModel):
     nom_entreprise: str = Field(..., max_length=200)
     secteur_activite: SecteurActivite
     taille_effectif: TailleEffectif
@@ -68,10 +68,19 @@ class PmeProfilCreate(BaseModel):
     reglementations_applicables: Optional[List[str]] = None
 
 
-class PmeProfilOut(PmeProfilCreate):
+class PmeProfilCreate(PmeProfilBase):
+    email: EmailStr
+    mot_de_passe: str = Field(..., min_length=6, max_length=72)  # 72 = limite bcrypt
+
+
+class PmeProfilOut(PmeProfilBase):
+    """N'hérite PAS de PmeProfilCreate — évite d'exposer `mot_de_passe`
+    (et évite une erreur de sérialisation, l'ORM n'ayant pas cet attribut,
+    seulement `mot_de_passe_hash`)."""
     model_config = ConfigDict(from_attributes=True)
 
     id_pme: UUID
+    email: EmailStr
     date_evaluation: date
 
 

@@ -1,8 +1,4 @@
-"""
-Sprint 5 — Setup SQLAlchemy : engine, session factory, Base déclarative
-(importée par tous les fichiers app/models/*.py), et la dépendance get_db()
-utilisée dans les routers (Depends(get_db)).
-"""
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 

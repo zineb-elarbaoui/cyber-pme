@@ -2,9 +2,25 @@ import { Link } from "@tanstack/react-router";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { PriorityBadge, MetaBadge, DomainTag } from "./Badges";
-import type { Recommendation } from "@/lib/mock-data";
+import type { PriorityBucket } from "@/lib/maturity";
 
-export function RecommendationCard({ rec, index }: { rec: Recommendation; index: number }) {
+// View-model utilisé par la carte — construit dans results.tsx à partir de
+// RecommandationOut (l'API). Découplé du type API brut pour que ce composant
+// reste indépendant de la forme exacte du backend.
+export type RecommendationVM = {
+  id: string;
+  title: string;
+  domainName: string;
+  priority: PriorityBucket;
+  cost: string;
+  difficulty: string;
+  impact: string;
+  guideRef: string;
+  summary: string;
+  rationale: string | null;
+};
+
+export function RecommendationCard({ rec, index }: { rec: RecommendationVM; index: number }) {
   const [open, setOpen] = useState(false);
   return (
     <article className="group relative overflow-hidden rounded-xl border border-border bg-gradient-card shadow-sm transition hover:shadow-elegant">
@@ -32,7 +48,7 @@ export function RecommendationCard({ rec, index }: { rec: Recommendation; index:
               <div className="mb-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Justification (RAG)
               </div>
-              {rec.rationale}
+              {rec.rationale ?? "Justification non disponible pour cette recommandation (générée sans RAG, ou modèle indisponible)."}
             </div>
           )}
           <div className="mt-4 flex items-center gap-2">

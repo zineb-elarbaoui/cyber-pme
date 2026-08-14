@@ -1,19 +1,4 @@
-"""
-Sprint 5 — Charge l'instance RuleEngine (Sprint 3) une seule fois au
-démarrage de l'app, à partir de database/seeds/regles_expertes.json et
-database/seeds/mesures.json (chemins confirmés dans tes notes de projet).
 
-Même logique que rag_service.py pour le modèle d'embeddings : RuleEngine()
-est bon marché à construire (juste de l'indexation de dicts en mémoire, pas
-de calcul lourd), mais il n'y a aucune raison de relire/re-parser les deux
-fichiers JSON à chaque requête HTTP — un seul chargement au démarrage suffit
-tant que les fichiers ne changent pas en cours d'exécution du serveur.
-
-TODO(Zineb) : si tes fichiers JSON ne sont pas dans database/seeds/ à la
-racine du repo mais ailleurs (ex: backend/database/seeds/), ajuste
-REGLES_JSON_PATH / MESURES_JSON_PATH ci-dessous, idéalement en les sortant
-vers app/config.py (settings.REGLES_JSON_PATH) plutôt qu'en dur ici.
-"""
 import json
 from pathlib import Path
 from typing import Optional
