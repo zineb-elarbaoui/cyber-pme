@@ -24,8 +24,16 @@ def creer_feedback(payload: FeedbackCreate, db: Session = Depends(get_db)):
         .filter(Feedback.id_recommandation == payload.id_recommandation)
         .first()
     )
+
     if existant is not None:
-        raise HTTPException(status_code=409, detail="Feedback déjà soumis pour cette recommandation")
+        
+        for champ, valeur in payload.model_dump().items():
+            if champ == "id_recommandation":
+                continue
+            setattr(existant, champ, valeur)
+        db.commit()
+        db.refresh(existant)
+        return existant
 
     feedback = Feedback(**payload.model_dump())
     db.add(feedback)

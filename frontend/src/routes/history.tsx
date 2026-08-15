@@ -1,80 +1,112 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
-import { historyPoints, recommendations, globalScore } from "@/lib/mock-data";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from "recharts";
+import { getSuiviRecommandations, ApiError, type SuiviItem } from "@/lib/api";
+import { useWizard } from "@/lib/wizard-context";
+import { priorityBucket } from "@/lib/maturity";
 import { PriorityBadge, DomainTag } from "@/components/cyber/Badges";
-import { CheckCircle2, Clock, TrendingUp } from "lucide-react";
+import { CheckCircle2, Clock, Info, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/history")({
   component: HistoryPage,
-  head: () => ({ meta: [{ title: "Historique — CyberDiag" }] }),
+  head: () => ({ meta: [{ title: "Suivi des recommandations — CyberDiag" }] }),
 });
 
 function HistoryPage() {
-  const treated = recommendations.slice(0, 3);
-  const pending = recommendations.slice(3);
-  const delta = historyPoints[historyPoints.length - 1].score - historyPoints[0].score;
+  const nav = useNavigate();
+  const { state } = useWizard();
+
+  useEffect(() => {
+    if (!state.idPme) nav({ to: "/profile" });
+  }, [state.idPme, nav]);
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const suiviQ = useQuery({
+    queryKey: ["suivi", state.idPme],
+    queryFn: () => getSuiviRecommandations(state.idPme as string),
+    enabled: mounted && !!state.idPme,
+  });
+
+  if (!mounted || suiviQ.isLoading) {
+    return (
+      <AppShell crumbs={[{ label: "Résultats", to: "/results" }, { label: "Suivi" }]}>
+        <div className="flex min-h-[50vh] items-center justify-center gap-2 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" /> Chargement du suivi…
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (suiviQ.isError || !suiviQ.data) {
+    return (
+      <AppShell crumbs={[{ label: "Résultats", to: "/results" }, { label: "Suivi" }]}>
+        <div className="mx-auto max-w-lg px-6 py-20 text-center">
+          <p className="text-sm text-muted-foreground">
+            {suiviQ.error instanceof ApiError
+              ? suiviQ.error.message
+              : "Aucune recommandation générée pour l'instant."}
+          </p>
+        </div>
+      </AppShell>
+    );
+  }
+
+  const { recommandations_traitees, recommandations_en_attente } = suiviQ.data;
+  const total = recommandations_traitees.length + recommandations_en_attente.length;
+  const pct = total > 0 ? Math.round((recommandations_traitees.length / total) * 100) : 0;
 
   return (
-    <AppShell crumbs={[{ label: "Accueil", to: "/" }, { label: "Historique" }]}>
+    <AppShell crumbs={[{ label: "Résultats", to: "/results" }, { label: "Suivi" }]}>
       <section className="mx-auto max-w-7xl px-6 py-10">
-        <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <div className="text-[11px] font-semibold uppercase tracking-widest text-[oklch(0.55_0.16_255)]">Suivi long terme · Atlas Distribution SARL</div>
-            <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight">Évolution de votre maturité cyber</h1>
+        <header className="mb-8">
+          <div className="text-[11px] font-semibold uppercase tracking-widest text-[oklch(0.55_0.16_255)]">
+            Suivi{state.profil.nom_entreprise ? ` · ${state.profil.nom_entreprise}` : ""}
           </div>
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-card p-3">
-            <TrendingUp className="h-5 w-5 text-[oklch(0.55_0.16_155)]" />
-            <div>
-              <div className="text-[10.5px] font-medium uppercase tracking-wider text-muted-foreground">Progression 12 mois</div>
-              <div className="font-display text-xl font-semibold text-[oklch(0.35_0.13_155)]">+{delta} points</div>
-            </div>
-          </div>
+          <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight">Suivi de la mise en œuvre</h1>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Basé sur les retours laissés depuis les pages de détail de chaque recommandation.
+          </p>
         </header>
 
-        {/* Chart */}
-        <div className="rounded-2xl border border-border bg-gradient-card p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Score global</div>
-              <div className="font-display text-lg font-semibold">Évolution trimestrielle</div>
-            </div>
-            <div className="text-right">
-              <div className="text-[10.5px] font-medium uppercase tracking-wider text-muted-foreground">Actuel</div>
-              <div className="font-display text-2xl font-semibold tabular-nums">{globalScore}<span className="text-sm text-muted-foreground">/102</span></div>
-            </div>
-          </div>
-          <div className="h-[280px] w-full">
-            <ResponsiveContainer>
-              <AreaChart data={historyPoints} margin={{ top: 5, right: 12, left: -12, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="oklch(0.55 0.16 255)" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="oklch(0.55 0.16 255)" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid stroke="oklch(0.92 0.015 250)" vertical={false} />
-                <XAxis dataKey="date" tick={{ fill: "oklch(0.5 0.03 258)", fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis domain={[0, 102]} tick={{ fill: "oklch(0.5 0.03 258)", fontSize: 11 }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ background: "oklch(0.22 0.07 258)", border: "none", borderRadius: 8, color: "white", fontSize: 12 }} />
-                <Area type="monotone" dataKey="score" stroke="oklch(0.55 0.16 255)" strokeWidth={2.5} fill="url(#areaGrad)" />
-                <Line type="monotone" dataKey="score" stroke="oklch(0.55 0.16 255)" strokeWidth={0} dot={{ r: 4, fill: "oklch(0.55 0.16 255)" }} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+        {/* Note honnête plutôt qu'un graphique fictif : pas de mécanisme de
+            snapshots d'évaluation dans le temps pour l'instant. */}
+        <div className="mb-6 flex items-start gap-2.5 rounded-lg border border-border bg-secondary/40 px-4 py-3 text-sm text-muted-foreground">
+          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>
+            L'évolution du score dans le temps sera disponible à partir d'une prochaine évaluation formelle —
+            cette page se limite pour l'instant au statut de mise en œuvre de chaque recommandation.
+          </span>
         </div>
 
-        {/* Recos progress */}
-        <div className="mt-6 grid gap-5 lg:grid-cols-2">
-          <Panel title="Recommandations traitées" count={treated.length} icon={CheckCircle2} tone="success">
-            {treated.map((r) => (
-              <RowItem key={r.id} rec={r} status="done" />
-            ))}
+        {total > 0 && (
+          <div className="mb-6 rounded-2xl border border-border bg-gradient-card p-5 shadow-sm">
+            <div className="mb-2 flex items-center justify-between text-sm">
+              <span className="font-medium text-foreground">Progression de la mise en œuvre</span>
+              <span className="tabular-nums text-muted-foreground">{recommandations_traitees.length}/{total} traitées</span>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
+              <div className="h-full rounded-full bg-[oklch(0.62_0.16_155)] transition-all" style={{ width: `${pct}%` }} />
+            </div>
+          </div>
+        )}
+
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Panel title="Recommandations traitées" count={recommandations_traitees.length} icon={CheckCircle2} tone="success">
+            {recommandations_traitees.length === 0 ? (
+              <EmptyNote text="Aucune recommandation marquée comme appliquée pour l'instant." />
+            ) : (
+              recommandations_traitees.map((r) => <RowItem key={r.id_recommandation} rec={r} status="done" />)
+            )}
           </Panel>
-          <Panel title="En attente d'action" count={pending.length} icon={Clock} tone="warning">
-            {pending.map((r) => (
-              <RowItem key={r.id} rec={r} status="pending" />
-            ))}
+          <Panel title="En attente d'action" count={recommandations_en_attente.length} icon={Clock} tone="warning">
+            {recommandations_en_attente.length === 0 ? (
+              <EmptyNote text="Tout est traité !" />
+            ) : (
+              recommandations_en_attente.map((r) => <RowItem key={r.id_recommandation} rec={r} status="pending" />)
+            )}
           </Panel>
         </div>
       </section>
@@ -98,15 +130,19 @@ function Panel({ title, count, icon: Icon, tone, children }: { title: string; co
   );
 }
 
-function RowItem({ rec, status }: { rec: (typeof recommendations)[number]; status: "done" | "pending" }) {
+function EmptyNote({ text }: { text: string }) {
+  return <div className="rounded-lg border border-dashed border-border p-4 text-center text-sm text-muted-foreground">{text}</div>;
+}
+
+function RowItem({ rec, status }: { rec: SuiviItem; status: "done" | "pending" }) {
   return (
     <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-background p-3">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <PriorityBadge priority={rec.priority} />
-          <DomainTag>{rec.domainName}</DomainTag>
+          <PriorityBadge priority={priorityBucket(rec.score_priorite)} />
+          <DomainTag>{rec.nom_domaine}</DomainTag>
         </div>
-        <div className="mt-1.5 truncate text-sm font-semibold text-foreground">{rec.title}</div>
+        <div className="mt-1.5 truncate text-sm font-semibold text-foreground">{rec.titre_mesure}</div>
       </div>
       {status === "done" ? (
         <span className="inline-flex items-center gap-1 rounded-full bg-[oklch(0.97_0.03_155)] px-2.5 py-0.5 text-[11px] font-semibold text-[oklch(0.35_0.13_155)] ring-1 ring-inset ring-[oklch(0.62_0.16_155)]/25">

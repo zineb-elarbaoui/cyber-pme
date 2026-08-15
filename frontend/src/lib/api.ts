@@ -1,4 +1,4 @@
-// src/lib/api.ts
+
 // Client API centralisant tous les appels vers le backend FastAPI .
 // Toutes les fonctions lèvent une erreur explicite en cas d'échec réseau ou HTTP.
 
@@ -35,7 +35,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return text ? JSON.parse(text) : (undefined as T);
 }
 
+
 // Types alignés sur le schéma backend (schema_pfa13.sql / schemas Pydantic)
+
 
 export type PmeProfilCreate = {
   nom_entreprise: string;
@@ -115,7 +117,9 @@ export type FeedbackCreate = {
   recommandation_appliquee?: boolean;
 };
 
+
 // Appels API
+
 
 export type ConnexionRequest = {
   email: string;
@@ -178,6 +182,24 @@ export function getRecommandations(idPme: string, avecRag = true) {
 // pour cette PME, auquel cas il faut appeler getRecommandations() ci-dessus.
 export function getRecommandationsExistantes(idPme: string) {
   return request<PlanActionOut>(`/recommandations/${idPme}`, { method: "GET" });
+}
+
+export type SuiviItem = {
+  id_recommandation: string;
+  id_domaine: number;
+  nom_domaine: string;
+  titre_mesure: string;
+  score_priorite: number;
+};
+
+export type SuiviRecommandationsOut = {
+  id_pme: string;
+  recommandations_traitees: SuiviItem[];
+  recommandations_en_attente: SuiviItem[];
+};
+
+export function getSuiviRecommandations(idPme: string) {
+  return request<SuiviRecommandationsOut>(`/recommandations/${idPme}/suivi`);
 }
 
 export function envoyerFeedback(data: FeedbackCreate) {

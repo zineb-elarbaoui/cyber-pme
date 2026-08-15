@@ -19,6 +19,7 @@ from app.models.domaine import Domaine
 from app.models.recommandation import RecommandationGeneree
 from app.models.regle_experte import RegleExperte
 from app.models.mesure import Mesure
+from app.models.feedback import Feedback
 
 router = APIRouter(
     prefix="/recommandations",
@@ -26,10 +27,10 @@ router = APIRouter(
 )
 
 
-
+# --------------------------------------------------------------------------
 # POST /recommandations/{id_pme}
 # Génère (et persiste) les recommandations pour une PME
-
+# --------------------------------------------------------------------------
 
 @router.post("/{id_pme}", response_model=PlanActionOut)
 def generer_recommandations(
@@ -63,12 +64,12 @@ def generer_recommandations(
     }
 
 
-
+# --------------------------------------------------------------------------
 # GET /recommandations/{id_pme}
 # Relit les recommandations déjà générées (dernière génération), sans
 # relancer le moteur de règles ni le RAG — affichage instantané quand une
 # PME se reconnecte à un diagnostic déjà terminé.
-
+# --------------------------------------------------------------------------
 
 @router.get("/{id_pme}", response_model=PlanActionOut)
 def lire_recommandations(id_pme: UUID, db: Session = Depends(get_db)):
@@ -122,10 +123,69 @@ def lire_recommandations(id_pme: UUID, db: Session = Depends(get_db)):
     }
 
 
+# --------------------------------------------------------------------------
+# GET /recommandations/{id_pme}/suivi
+# Sépare les recommandations traitées / en attente, basé sur la table feedback
+# --------------------------------------------------------------------------
 
+@router.get("/{id_pme}/suivi")
+def suivi_recommandations(id_pme: UUID, db: Session = Depends(get_db)):
+    """Sépare les recommandations en 'traitées' (feedback.recommandation_appliquee
+    = true) et 'en attente' (pas de feedback, ou appliquée=false/non renseigné).
+    Basé sur de vraies données — contrairement à un historique d'évolution du
+    score, qui nécessiterait un mécanisme de snapshots d'évaluation dans le
+    temps, absent du schéma actuel (une seule évaluation par PME)."""
+
+    derniere_date = (
+        db.query(func.max(RecommandationGeneree.date_generation))
+        .filter(RecommandationGeneree.id_pme == id_pme)
+        .scalar()
+    )
+    if derniere_date is None:
+        raise HTTPException(status_code=404, detail="Aucune recommandation générée pour cette PME.")
+
+    rows = (
+        db.query(RecommandationGeneree, RegleExperte, Mesure, Domaine, Feedback)
+        .join(RegleExperte, RecommandationGeneree.id_regle == RegleExperte.id_regle)
+        .join(Mesure, RegleExperte.id_mesure == Mesure.id_mesure)
+        .join(Domaine, RegleExperte.id_domaine == Domaine.id_domaine)
+        .outerjoin(Feedback, Feedback.id_recommandation == RecommandationGeneree.id_recommandation)
+        .filter(
+            RecommandationGeneree.id_pme == id_pme,
+            RecommandationGeneree.date_generation == derniere_date,
+        )
+        .order_by(RecommandationGeneree.score_priorite.desc())
+        .all()
+    )
+
+    def to_dict(reco, regle, mesure, domaine):
+        return {
+            "id_recommandation": reco.id_recommandation,
+            "id_domaine": regle.id_domaine,
+            "nom_domaine": domaine.nom_domaine,
+            "titre_mesure": mesure.titre,
+            "score_priorite": float(reco.score_priorite),
+        }
+
+    traitees, en_attente = [], []
+    for reco, regle, mesure, domaine, feedback in rows:
+        item = to_dict(reco, regle, mesure, domaine)
+        if feedback is not None and feedback.recommandation_appliquee is True:
+            traitees.append(item)
+        else:
+            en_attente.append(item)
+
+    return {
+        "id_pme": id_pme,
+        "recommandations_traitees": traitees,
+        "recommandations_en_attente": en_attente,
+    }
+
+
+# --------------------------------------------------------------------------
 # GET /recommandations/{id_pme}/pdf
 # Génère et télécharge le rapport PDF de cybersécurité
-
+# --------------------------------------------------------------------------
 
 @router.get("/{id_pme}/pdf")
 def telecharger_rapport_pdf(
