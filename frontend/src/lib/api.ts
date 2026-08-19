@@ -4,6 +4,7 @@
 
 const API_URL = (((import.meta as any).env?.VITE_API_URL) as string) || "http://localhost:8000";
 
+
 class ApiError extends Error {
   status: number;
   constructor(message: string, status: number) {
@@ -35,9 +36,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return text ? JSON.parse(text) : (undefined as T);
 }
 
-
+// ---------------------------------------------------------------------------
 // Types alignés sur le schéma backend (schema_pfa13.sql / schemas Pydantic)
-
+// ---------------------------------------------------------------------------
 
 export type PmeProfilCreate = {
   nom_entreprise: string;
@@ -117,9 +118,9 @@ export type FeedbackCreate = {
   recommandation_appliquee?: boolean;
 };
 
-
+// ---------------------------------------------------------------------------
 // Appels API
-
+// ---------------------------------------------------------------------------
 
 export type ConnexionRequest = {
   email: string;
@@ -210,8 +211,10 @@ export function envoyerFeedback(data: FeedbackCreate) {
 }
 
 // Le PDF n'est pas du JSON — appel fetch direct plutôt que via request().
-export async function telechargerRapportPdf(idPme: string, nomEntreprise?: string, avecRag = false) {
-  const res = await fetch(`${API_URL}/recommandations/${idPme}/pdf?avec_rag=${avecRag}`);
+// Le backend lit désormais uniquement le dernier lot déjà généré (ne
+// régénère plus jamais rien) — pas de paramètre avec_rag ici.
+export async function telechargerRapportPdf(idPme: string, nomEntreprise?: string) {
+  const res = await fetch(`${API_URL}/recommandations/${idPme}/pdf`);
   if (!res.ok) {
     throw new ApiError(`Impossible de générer le PDF (${res.status})`, res.status);
   }

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { PriorityBadge, MetaBadge, DomainTag } from "@/components/cyber/Badges";
 import { ArrowLeft, BookOpen, MessageSquare, Star, ThumbsUp, CheckCircle2, Loader2 } from "lucide-react";
-import { getRecommandations, envoyerFeedback, ApiError } from "@/lib/api";
+import { getRecommandations, getRecommandationsExistantes, envoyerFeedback, ApiError } from "@/lib/api";
 import { useWizard } from "@/lib/wizard-context";
 import { priorityBucket } from "@/lib/maturity";
 
@@ -27,7 +27,20 @@ function RecommendationDetail() {
   // refetch automatique tant que le cache existe.
   const recommandationsQ = useQuery({
     queryKey: ["recommandations", state.idPme],
-    queryFn: () => getRecommandations(state.idPme as string, true),
+    queryFn: async () => {
+      // Même logique que results.tsx : relit ce qui existe déjà en priorité.
+      // Sans ça, chaque visite de cette page relançait une régénération
+      // complète (nouveau lot, nouveaux UUID) au lieu de réutiliser les
+      // recommandations + justifications déjà générées.
+      try {
+        return await getRecommandationsExistantes(state.idPme as string);
+      } catch (e) {
+        if (e instanceof ApiError && e.status === 404) {
+          return await getRecommandations(state.idPme as string, true);
+        }
+        throw e;
+      }
+    },
     enabled: mounted && !!state.idPme,
     staleTime: Infinity,
   });

@@ -1,4 +1,5 @@
 from uuid import UUID
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response
@@ -28,8 +29,59 @@ router = APIRouter(
 
 
 # --------------------------------------------------------------------------
+# Fonction interne partagée — lit le DERNIER lot déjà persisté, sans jamais
+# en générer un nouveau. Utilisée par GET /{id_pme} ET par l'export PDF, pour
+# qu'aucune simple consultation ne puisse écraser silencieusement un lot
+# généré avec RAG par un lot plus récent généré sans RAG (bug corrigé ici :
+# l'export PDF appelait auparavant generer_recommandations_pour_pme(), qui
+# PERSISTE toujours un nouveau lot — même pour une simple lecture).
+# --------------------------------------------------------------------------
+
+def _lire_dernier_lot(db: Session, id_pme: UUID) -> Optional[list[dict]]:
+    derniere_date = (
+        db.query(func.max(RecommandationGeneree.date_generation))
+        .filter(RecommandationGeneree.id_pme == id_pme)
+        .scalar()
+    )
+    if derniere_date is None:
+        return None
+
+    rows = (
+        db.query(RecommandationGeneree, RegleExperte, Mesure, Domaine)
+        .join(RegleExperte, RecommandationGeneree.id_regle == RegleExperte.id_regle)
+        .join(Mesure, RegleExperte.id_mesure == Mesure.id_mesure)
+        .join(Domaine, RegleExperte.id_domaine == Domaine.id_domaine)
+        .filter(
+            RecommandationGeneree.id_pme == id_pme,
+            RecommandationGeneree.date_generation == derniere_date,
+        )
+        .order_by(RecommandationGeneree.score_priorite.desc())
+        .all()
+    )
+
+    return [
+        {
+            "id_recommandation": reco.id_recommandation,
+            "id_regle": reco.id_regle,
+            "id_domaine": regle.id_domaine,
+            "id_mesure": regle.id_mesure,
+            "nom_domaine": domaine.nom_domaine,
+            "titre_mesure": mesure.titre,
+            "description_mesure": mesure.description,
+            "cout_estime": mesure.cout_estime,
+            "difficulte_estimee": mesure.difficulte_estimee,
+            "impact": mesure.impact,
+            "section_guide_precise": mesure.section_guide_precise,
+            "score_priorite": float(reco.score_priorite),
+            "justification_rag": reco.justification_rag,
+        }
+        for reco, regle, mesure, domaine in rows
+    ]
+
+
+# --------------------------------------------------------------------------
 # POST /recommandations/{id_pme}
-# Génère (et persiste) les recommandations pour une PME
+# SEUL endpoint qui génère (et persiste) un nouveau lot de recommandations.
 # --------------------------------------------------------------------------
 
 @router.post("/{id_pme}", response_model=PlanActionOut)
@@ -66,55 +118,17 @@ def generer_recommandations(
 
 # --------------------------------------------------------------------------
 # GET /recommandations/{id_pme}
-# Relit les recommandations déjà générées (dernière génération), sans
-# relancer le moteur de règles ni le RAG — affichage instantané quand une
-# PME se reconnecte à un diagnostic déjà terminé.
+# Relit le dernier lot déjà généré — ne génère jamais rien.
 # --------------------------------------------------------------------------
 
 @router.get("/{id_pme}", response_model=PlanActionOut)
 def lire_recommandations(id_pme: UUID, db: Session = Depends(get_db)):
-    derniere_date = (
-        db.query(func.max(RecommandationGeneree.date_generation))
-        .filter(RecommandationGeneree.id_pme == id_pme)
-        .scalar()
-    )
-    if derniere_date is None:
+    recommandations = _lire_dernier_lot(db, id_pme)
+    if recommandations is None:
         raise HTTPException(
             status_code=404,
             detail="Aucune recommandation générée pour cette PME — appelez POST /recommandations/{id_pme} d'abord.",
         )
-
-    rows = (
-        db.query(RecommandationGeneree, RegleExperte, Mesure, Domaine)
-        .join(RegleExperte, RecommandationGeneree.id_regle == RegleExperte.id_regle)
-        .join(Mesure, RegleExperte.id_mesure == Mesure.id_mesure)
-        .join(Domaine, RegleExperte.id_domaine == Domaine.id_domaine)
-        .filter(
-            RecommandationGeneree.id_pme == id_pme,
-            RecommandationGeneree.date_generation == derniere_date,
-        )
-        .order_by(RecommandationGeneree.score_priorite.desc())
-        .all()
-    )
-
-    recommandations = [
-        {
-            "id_recommandation": reco.id_recommandation,
-            "id_regle": reco.id_regle,
-            "id_domaine": regle.id_domaine,
-            "id_mesure": regle.id_mesure,
-            "nom_domaine": domaine.nom_domaine,
-            "titre_mesure": mesure.titre,
-            "description_mesure": mesure.description,
-            "cout_estime": mesure.cout_estime,
-            "difficulte_estimee": mesure.difficulte_estimee,
-            "impact": mesure.impact,
-            "section_guide_precise": mesure.section_guide_precise,
-            "score_priorite": float(reco.score_priorite),
-            "justification_rag": reco.justification_rag,
-        }
-        for reco, regle, mesure, domaine in rows
-    ]
 
     return {
         "id_pme": id_pme,
@@ -130,12 +144,6 @@ def lire_recommandations(id_pme: UUID, db: Session = Depends(get_db)):
 
 @router.get("/{id_pme}/suivi")
 def suivi_recommandations(id_pme: UUID, db: Session = Depends(get_db)):
-    """Sépare les recommandations en 'traitées' (feedback.recommandation_appliquee
-    = true) et 'en attente' (pas de feedback, ou appliquée=false/non renseigné).
-    Basé sur de vraies données — contrairement à un historique d'évolution du
-    score, qui nécessiterait un mécanisme de snapshots d'évaluation dans le
-    temps, absent du schéma actuel (une seule évaluation par PME)."""
-
     derniere_date = (
         db.query(func.max(RecommandationGeneree.date_generation))
         .filter(RecommandationGeneree.id_pme == id_pme)
@@ -184,25 +192,23 @@ def suivi_recommandations(id_pme: UUID, db: Session = Depends(get_db)):
 
 # --------------------------------------------------------------------------
 # GET /recommandations/{id_pme}/pdf
-# Génère et télécharge le rapport PDF de cybersécurité
+# Génère et télécharge le rapport PDF — LIT le dernier lot déjà généré,
+# ne régénère JAMAIS rien (corrige le bug qui écrasait les justifications
+# RAG existantes à chaque export PDF).
 # --------------------------------------------------------------------------
 
 @router.get("/{id_pme}/pdf")
-def telecharger_rapport_pdf(
-    id_pme: UUID,
-    avec_rag: bool = Query(default=False, description="Inclure les justifications RAG (nécessite Ollama actif)."),
-    db: Session = Depends(get_db),
-):
+def telecharger_rapport_pdf(id_pme: UUID, db: Session = Depends(get_db)):
     profil = db.query(PmeProfil).filter(PmeProfil.id_pme == id_pme).first()
     if not profil:
         raise HTTPException(status_code=404, detail="Profil PME introuvable")
 
-    # Réutilise la même logique que POST /recommandations/{id_pme} — pas de
-    # requête SQL dupliquée pour les recommandations elles-mêmes.
-    try:
-        plan = generer_recommandations_pour_pme(db, id_pme, avec_justification_rag=avec_rag)
-    except ValueError:
-        raise HTTPException(status_code=404, detail="PME introuvable ou sans réponses")
+    plan = _lire_dernier_lot(db, id_pme)
+    if plan is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Aucune recommandation générée pour cette PME — appelez POST /recommandations/{id_pme} d'abord.",
+        )
 
     # --- Scores par domaine : jointure reponse -> question -> domaine ----
     lignes = (
@@ -237,8 +243,6 @@ def telecharger_rapport_pdf(
     global_score = contexte_score + sum(d["score"] for d in domaines_list)
     max_score = contexte_max + sum(d["max"] for d in domaines_list)
 
-    # Regroupement des paliers de priorité — mêmes seuils provisoires que
-    # côté frontend (src/lib/maturity.ts), à recalibrer ensemble au Sprint 7.
     def bucket(score: float) -> str:
         if score >= 15:
             return "critical"
@@ -248,8 +252,6 @@ def telecharger_rapport_pdf(
             return "medium"
         return "low"
 
-    # `plan` vient de generer_recommandations_pour_pme() — confirmé être une
-    # liste de dicts, donc accès par clé plutôt que par attribut.
     recommandations_data = [
         {
             "titre": r["titre_mesure"],

@@ -53,6 +53,7 @@ function ResultsPage() {
       }
     },
     enabled: mounted && !!state.idPme,
+    staleTime: Infinity, // évite un refetch silencieux à chaque remount/refocus — handleRegenererAvecRag() force un refetch() explicite si besoin
   });
 
   const [prio, setPrio] = useState<"all" | PriorityBucket>("all");
@@ -60,6 +61,7 @@ function ResultsPage() {
   const [cost, setCost] = useState<string>("all");
   const [exportingPdf, setExportingPdf] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const [regenerating, setRegenerating] = useState(false);
 
   async function handleExportPdf() {
     if (!state.idPme) return;
@@ -71,6 +73,22 @@ function ResultsPage() {
       setPdfError(e instanceof ApiError ? e.message : "Erreur lors du téléchargement du PDF.");
     } finally {
       setExportingPdf(false);
+    }
+  }
+
+  async function handleRegenererAvecRag() {
+    if (!state.idPme) return;
+    setRegenerating(true);
+    try {
+      // Force un nouvel appel POST avec_rag=true (contourne le cache GET) —
+      // crée un nouveau lot de recommandations avec justifications, que le
+      // prochain GET récupérera comme "dernière génération".
+      await getRecommandations(state.idPme, true);
+      await recommandationsQ.refetch();
+    } catch (e) {
+      setPdfError(e instanceof ApiError ? e.message : "Erreur lors de la génération des justifications.");
+    } finally {
+      setRegenerating(false);
     }
   }
 
@@ -219,6 +237,24 @@ function ResultsPage() {
             </button>
           </div>
         </div>
+
+        {/* Si le dernier lot a été généré sans RAG (avec_rag=false), aucune
+            recommandation n'a de justification — on propose de régénérer. */}
+        {recommendations.length > 0 && recommendations.every((r) => !r.rationale) && (
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+            <span className="text-sm text-foreground">
+              Ces recommandations n'ont pas encore de justification détaillée (générées sans RAG).
+            </span>
+            <button
+              onClick={handleRegenererAvecRag}
+              disabled={regenerating}
+              className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-elegant transition hover:opacity-95 disabled:opacity-60"
+            >
+              {regenerating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+              {regenerating ? "Génération en cours…" : "Générer les justifications"}
+            </button>
+          </div>
+        )}
 
         {/* Top row: gauge + KPIs */}
         <div className="grid gap-5 lg:grid-cols-[380px_1fr]">
